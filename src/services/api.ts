@@ -48,8 +48,8 @@ export const getLocationsByZip = async (zipCodes: string[]) => {
 };
 
 // Search Locations by City and State
-export const searchLocations = async (city: string, state: string) => {
-  const response = await api.post('/locations/search', { city, state });
+export const searchLocations = async (query: any) => {
+  const response = await api.post('/locations/search', query );
   return response.data;
 };
 

@@ -8,12 +8,14 @@ import {
   Form, 
   FormGroup, 
   Label,
-  Alert
+  Alert,
+  Modal, ModalHeader
 } from 'reactstrap';
 import Select from 'react-select';
 import { getBreeds, searchDogs, getDogsByIds, matchDogs } from '../services/api';
 import DogCard from '../components/DogCard';
 import PaginationComponent from './PaginationComponent';
+import LocationFilterComponent from './LocationFilterComponent';
 
 const SearchPage: React.FC = () => {
   const [dogs, setDogs] = useState<any[]>([]);
@@ -24,6 +26,9 @@ const SearchPage: React.FC = () => {
   const [page, setPage] = useState<number>(1);
   const [totalPages, setTotalPages] = useState<number>(1);
   const [error, setError] = useState<string | null>(null);
+  const [filterModalOpen, setFilterModalOpen] = useState<boolean>(false);
+  const [zipCodesFromFilter, setZipCodesFromFilter] = useState<string[]>([])
+
   const dogsPerPage = 24; // Number of dogs per page
   const maxPagesToShow = 5; // Number of page numbers to display at once
   
@@ -42,7 +47,7 @@ const SearchPage: React.FC = () => {
     };
 
     fetchInitialData();
-  }, [page, selectedBreed, sortOrder]);
+  }, [page, selectedBreed, sortOrder, zipCodesFromFilter]);
 
   const fetchDogs = async () => {
     const params: any = {
@@ -50,6 +55,7 @@ const SearchPage: React.FC = () => {
       size: dogsPerPage,
       from: (page - 1) * dogsPerPage,
       sort: sortOrder.value,
+      zipCodes: [...zipCodesFromFilter]
     };
     try {
       const response = await searchDogs(params);
@@ -60,6 +66,10 @@ const SearchPage: React.FC = () => {
       setError('Error fetching dogs');
     }
   };
+
+  const handleZipCodesFromFilter = (zipCodes: string[]) => {
+    setZipCodesFromFilter(zipCodes)
+  }
 
   const handleFavorite = (dogId: string) => {
     setFavorites((prev) => {
@@ -80,25 +90,34 @@ const SearchPage: React.FC = () => {
     }
   };
 
+  const toggleFilterModal = () => setFilterModalOpen(!filterModalOpen)
+
   return (
     <Container>
-      <h2 className="my-4">Search for Your Perfect Dog</h2>
+      <h2 className="my-4">Welcome to Fetch! 🐶 Find Your New Best Friend</h2>
       {error && <Alert color="danger">{error}</Alert>}
       <Form>
         <FormGroup>
           <Label for="breed">Breed</Label>
           <Select
             id="breed"
-            onChange={(e: any) => setSelectedBreed(e.value)}
+            onChange={(e: any) => {
+              if (e?.value) {
+                setSelectedBreed(e.value)
+              } else {
+                setSelectedBreed('')
+              }
+            }}
             getOptionLabel={(e) => e.label}
             getOptionValue={(e) => e.value}
+            isClearable={true}
             options={
               breeds.map((breed: string) => ({
                 value: breed,
                 label: breed
               }))
             }
-            placeholder="Sort Order"
+            placeholder="Breed"
           />
         </FormGroup>
         <FormGroup>
@@ -118,6 +137,18 @@ const SearchPage: React.FC = () => {
           />
         </FormGroup>
       </Form>
+      <LocationFilterComponent
+        handleZipCodesFromFilter={handleZipCodesFromFilter}
+      />
+      {/* <Button color="primary" onClick={toggleFilterModal}>
+        Add More Filters
+      </Button>
+      <Modal isOpen={filterModalOpen} toggle={toggleFilterModal}>
+        <ModalHeader toggle={toggleFilterModal}>Filters</ModalHeader>
+        <AdditionalFilters
+          toggleFilterModal={toggleFilterModal}
+        />
+      </Modal> */}
 
       <Row>
         {dogs.map((dog) => (
