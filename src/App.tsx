@@ -1,10 +1,17 @@
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import Login from './components/Login';
+import Search from './components/Search';
 
-function App() {
+const App = () => {
+
   return (
-    <div>
-      Hello
-    </div>
+    <Router>
+      <Routes>
+        <Route path="/" element={<Login />} />
+        <Route path="/search" element={<Search />} />
+      </Routes>
+    </Router>
   );
-}
+};
 
 export default App;
