@@ -40,3 +40,21 @@ export const matchDogs = async (dogIds: string[]) => {
   const response = await api.post('/dogs/match', dogIds);
   return response.data;
 };
+
+// Fetch Locations by ZIP code(s)
+export const getLocationsByZip = async (zipCodes: string[]) => {
+  const response = await api.post('/locations', { zipCodes });
+  return response.data;
+};
+
+// Search Locations by City and State
+export const searchLocations = async (city: string, state: string) => {
+  const response = await api.post('/locations/search', { city, state });
+  return response.data;
+};
+
+// Search Locations by Geographic Bounding Box (latitude/longitude)
+export const searchLocationsByBounds = async (lat1: number, lon1: number, lat2: number, lon2: number) => {
+  const response = await api.post('/locations/search', { lat1, lon1, lat2, lon2 });
+  return response.data;
+};

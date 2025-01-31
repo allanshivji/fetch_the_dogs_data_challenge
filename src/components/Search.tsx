@@ -7,10 +7,10 @@ import {
   Col, 
   Form, 
   FormGroup, 
-  Label, 
-  Input, 
+  Label,
   Alert
 } from 'reactstrap';
+import Select from 'react-select';
 import { getBreeds, searchDogs, getDogsByIds, matchDogs } from '../services/api';
 import DogCard from '../components/DogCard';
 import PaginationComponent from './PaginationComponent';
@@ -19,7 +19,7 @@ const SearchPage: React.FC = () => {
   const [dogs, setDogs] = useState<any[]>([]);
   const [breeds, setBreeds] = useState<string[]>([]);
   const [selectedBreed, setSelectedBreed] = useState<string>('');
-  const [sortOrder, setSortOrder] = useState<string>('breed:asc');
+  const [sortOrder, setSortOrder] = useState<any>({value: 'breed:asc', label: 'Breed Ascending'});
   const [favorites, setFavorites] = useState<string[]>([]);
   const [page, setPage] = useState<number>(1);
   const [totalPages, setTotalPages] = useState<number>(1);
@@ -49,11 +49,10 @@ const SearchPage: React.FC = () => {
       breeds: selectedBreed ? [selectedBreed] : [],
       size: dogsPerPage,
       from: (page - 1) * dogsPerPage,
-      sort: sortOrder,
+      sort: sortOrder.value,
     };
     try {
       const response = await searchDogs(params);
-      console.log('Search Dogs', response)
       const dogDetails = await getDogsByIds(response.resultIds);
       setDogs(dogDetails);
       setTotalPages(Math.ceil(response.total / dogsPerPage)); // Calculate total pages
@@ -81,69 +80,6 @@ const SearchPage: React.FC = () => {
     }
   };
 
-  // // Determine the range of pages to display
-  // const getPageRange = () => {
-  //   const range: number[] = [];
-  //   const leftLimit = Math.max(1, page - Math.floor(maxPagesToShow / 2));
-  //   const rightLimit = Math.min(totalPages, leftLimit + maxPagesToShow - 1);
-
-  //   for (let i = leftLimit; i <= rightLimit; i++) {
-  //     range.push(i);
-  //   }
-
-  //   return range;
-  // };
-
-  // Function to render the page numbers with ellipses and last page
-  // const renderPagination = () => {
-  //   const range = getPageRange();
-
-  //   const pages: JSX.Element[] = [];
-
-  //   // Always show "1" and "..." before the range if not the first pages
-  //   if (range[0] > 1) {
-  //     pages.push(
-  //       <PaginationItem key="first">
-  //         <PaginationLink onClick={() => setPage(1)}>1</PaginationLink>
-  //       </PaginationItem>
-  //     );
-  //     if (range[0] > 2) {
-  //       pages.push(
-  //         <PaginationItem key="ellipsis-start">
-  //           <PaginationLink disabled>...</PaginationLink>
-  //         </PaginationItem>
-  //       );
-  //     }
-  //   }
-
-  //   // Add the range of pages
-  //   range.forEach((pageNum) => {
-  //     pages.push(
-  //       <PaginationItem key={pageNum} active={pageNum === page}>
-  //         <PaginationLink onClick={() => setPage(pageNum)}>{pageNum}</PaginationLink>
-  //       </PaginationItem>
-  //     );
-  //   });
-
-  //   // Always show "..." and the last page if not the last pages
-  //   if (range[range.length - 1] < totalPages) {
-  //     if (range[range.length - 1] < totalPages - 1) {
-  //       pages.push(
-  //         <PaginationItem key="ellipsis-end">
-  //           <PaginationLink disabled>...</PaginationLink>
-  //         </PaginationItem>
-  //       );
-  //     }
-  //     pages.push(
-  //       <PaginationItem key="last">
-  //         <PaginationLink onClick={() => setPage(totalPages)}>{totalPages}</PaginationLink>
-  //       </PaginationItem>
-  //     );
-  //   }
-
-  //   return pages;
-  // };
-
   return (
     <Container>
       <h2 className="my-4">Search for Your Perfect Dog</h2>
@@ -151,35 +87,35 @@ const SearchPage: React.FC = () => {
       <Form>
         <FormGroup>
           <Label for="breed">Breed</Label>
-          <Input
-            type="select"
-            name="breed"
+          <Select
             id="breed"
-            value={selectedBreed}
-            onChange={(e) => setSelectedBreed(e.target.value)}
-          >
-            <option value="">Select Breed</option>
-            {breeds.map((breed) => (
-              <option key={breed} value={breed}>
-                {breed}
-              </option>
-            ))}
-          </Input>
+            onChange={(e: any) => setSelectedBreed(e.value)}
+            getOptionLabel={(e) => e.label}
+            getOptionValue={(e) => e.value}
+            options={
+              breeds.map((breed: string) => ({
+                value: breed,
+                label: breed
+              }))
+            }
+            placeholder="Sort Order"
+          />
         </FormGroup>
         <FormGroup>
           <Label for="sortOrder">Sort Order</Label>
-          <Input
-            type="select"
-            name="sortOrder"
+          <Select
             id="sortOrder"
-            value={sortOrder}
-            onChange={(e) => setSortOrder(e.target.value)}
-          >
-            <option value="breed:asc">Breed Ascending</option>
-            <option value="breed:desc">Breed Descending</option>
-            <option value="name:asc">Name Ascending</option>
-            <option value="name:desc">Name Descending</option>
-          </Input>
+            onChange={(selected) => setSortOrder(selected)}
+            getOptionLabel={(e) => e.label}
+            getOptionValue={(e) => e.value}
+            options={[
+              { value: 'breed:asc', label: 'Breed Ascending' },
+              { value: 'breed:desc', label: 'Breed Descending' },
+              { value: 'name:asc', label: 'Name Ascending' },
+              { value: 'name:desc', label: 'Name Descending' },
+            ]}
+            placeholder="Sort Order"
+          />
         </FormGroup>
       </Form>
 
