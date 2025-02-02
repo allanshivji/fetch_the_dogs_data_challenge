@@ -9,6 +9,7 @@ import {
   FormGroup, 
   Label,
   Alert,
+  Input,
   Modal, ModalHeader
 } from 'reactstrap';
 import Select from 'react-select';
@@ -16,6 +17,12 @@ import { getBreeds, searchDogs, getDogsByIds, matchDogs } from '../services/api'
 import DogCard from '../components/DogCard';
 import PaginationComponent from './PaginationComponent';
 import LocationFilterComponent from './LocationFilterComponent';
+import MultiRangeSlider from './MultiRangeSlider';
+
+interface RangeType {
+  min: number;
+  max: number;
+}
 
 const SearchPage: React.FC = () => {
   const [dogs, setDogs] = useState<any[]>([]);
@@ -27,7 +34,8 @@ const SearchPage: React.FC = () => {
   const [totalPages, setTotalPages] = useState<number>(1);
   const [error, setError] = useState<string | null>(null);
   const [filterModalOpen, setFilterModalOpen] = useState<boolean>(false);
-  const [zipCodesFromFilter, setZipCodesFromFilter] = useState<string[]>([])
+  const [zipCodesFromFilter, setZipCodesFromFilter] = useState<string[]>([]);
+  const [ageRange, setAgeRange] = useState<RangeType>({ min:0, max:20 });
 
   const dogsPerPage = 24; // Number of dogs per page
   const maxPagesToShow = 5; // Number of page numbers to display at once
@@ -40,6 +48,9 @@ const SearchPage: React.FC = () => {
         const breedList = await getBreeds();
         setBreeds(breedList);
         fetchDogs();
+        if (error) {
+          setError('')
+        }
       } catch (err) {
         setError('Error fetching data');
         navigate('/')
@@ -47,7 +58,7 @@ const SearchPage: React.FC = () => {
     };
 
     fetchInitialData();
-  }, [page, selectedBreed, sortOrder, zipCodesFromFilter]);
+  }, [page, selectedBreed, sortOrder, zipCodesFromFilter, ageRange]);
 
   const fetchDogs = async () => {
     const params: any = {
@@ -55,6 +66,8 @@ const SearchPage: React.FC = () => {
       size: dogsPerPage,
       from: (page - 1) * dogsPerPage,
       sort: sortOrder.value,
+      ageMin: ageRange.min,
+      ageMax: ageRange.max,
       zipCodes: [...zipCodesFromFilter]
     };
     try {
@@ -66,6 +79,10 @@ const SearchPage: React.FC = () => {
       setError('Error fetching dogs');
     }
   };
+
+  const handleAgeChange = (range: any) => {
+    setAgeRange(range)
+  }
 
   const handleZipCodesFromFilter = (zipCodes: string[]) => {
     setZipCodesFromFilter(zipCodes)
@@ -89,6 +106,8 @@ const SearchPage: React.FC = () => {
       setError('Error generating match');
     }
   };
+
+  console.log('dogs',dogs)
 
   const toggleFilterModal = () => setFilterModalOpen(!filterModalOpen)
 
@@ -136,10 +155,24 @@ const SearchPage: React.FC = () => {
             placeholder="Sort Order"
           />
         </FormGroup>
+        <FormGroup>
+          <Label for="slider">Select Value: {ageRange.min} - {ageRange.max}</Label>
+          <MultiRangeSlider minRangeValue={ageRange.min} maxRangeValue={ageRange.max} handleChange={handleAgeChange}  />
+          {/* <Input
+            type="range"
+            id="slider"
+            min="0"
+            max="20"
+            value={age || 20}
+            onChange={(e: any) => setAge(Number(e.target.value))}
+          /> */}
+        </FormGroup>
+        <FormGroup>
+          <LocationFilterComponent
+            handleZipCodesFromFilter={handleZipCodesFromFilter}
+          />
+        </FormGroup>
       </Form>
-      <LocationFilterComponent
-        handleZipCodesFromFilter={handleZipCodesFromFilter}
-      />
       {/* <Button color="primary" onClick={toggleFilterModal}>
         Add More Filters
       </Button>
@@ -150,27 +183,33 @@ const SearchPage: React.FC = () => {
         />
       </Modal> */}
 
-      <Row>
-        {dogs.map((dog) => (
-          <Col key={dog.id} sm="12" md="6" lg="4" xl="3">
-            <DogCard dog={dog} onFavorite={() => handleFavorite(dog.id)} />
-          </Col>
-        ))}
-      </Row>
+      {
+       dogs.length != 0 ?
+       <>
+        <Row>
+          {dogs.map((dog) => (
+            <Col key={dog.id} sm="12" md="6" lg="4" xl="3">
+              <DogCard dog={dog} onFavorite={() => handleFavorite(dog.id)} />
+            </Col>
+          ))}
+        </Row>
 
-      {/* Pagination */}
-      <div className="d-flex justify-content-center mt-4">
-        <PaginationComponent 
-          page={page}
-          setPage={setPage}
-          maxPagesToShow={maxPagesToShow}
-          totalPages={totalPages}
-        />
-      </div>
+        {/* Pagination */}
+        <div className="d-flex justify-content-center mt-4">
+          <PaginationComponent 
+            page={page}
+            setPage={setPage}
+            maxPagesToShow={maxPagesToShow}
+            totalPages={totalPages}
+          />
+        </div>
 
-      <Button color="danger" onClick={handleGenerateMatch} className="mt-3 ml-3">
-        Generate Match
-      </Button>
+        <Button color="danger" onClick={handleGenerateMatch} className="mt-3 ml-3">
+          Generate Match
+        </Button>
+      </>
+      : 'No Dogs Found'
+      }
     </Container>
   );
 };
