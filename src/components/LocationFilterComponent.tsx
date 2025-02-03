@@ -1,8 +1,9 @@
+import { useEffect } from 'react';
 import Select from 'react-select';
 import { Label } from 'reactstrap';
-import TilesInput from './TilesInput';
+import GoogleMap from './GoogleMap';
 import useLocationFilter from './useLocationFilter';
-import { useEffect } from 'react';
+import TilesInput from './TilesInput';
 
 interface LocationFilterComponentProps {
   handleZipCodesFromFilter: (zipCodes: string[]) => void
@@ -77,6 +78,10 @@ const LocationFilterComponent: React.FC<LocationFilterComponentProps> = ({ handl
       <div>
         <Label for="sortOrder">Zip Code</Label>
         <TilesInput setZipCodesFromInput={setZipCodesFromInput} />
+      </div>
+      <div>
+        <Label for="sortOrder">Zip Code</Label>
+        {process.env.REACT_APP_GOOGLE_MAPS_API_KEY && <GoogleMap handleGeoSearch={handleGeoSearch} />}
       </div>
 
       {/* Geo-location Search with React-Select */}

@@ -62,16 +62,14 @@ const useLocationFilter = () => {
   // Debounced search for geo-location bounding box (if applicable)
   const debouncedSearchGeo = debounce(async (query: string) => {
     try {
-      const response = await axios.post(
-        'https://frontend-take-home-service.fetch.com/locations/search',
-        { geoBoundingBox: query, size: 10 }
-      );
-      const locations = response.data.results as Location[];
+      const response = await searchLocations({ geoBoundingBox: query })
+      const locations = response.results as Location[];
       const fetchedGeo = locations.map(loc => ({
         label: `${loc.city}, ${loc.state} - ${loc.zip_code}`,
         value: loc.zip_code,
       }));
       setGeoLocations(fetchedGeo);
+      setSelectedGeoLocations(fetchedGeo)
     } catch (error) {
       console.error('Error fetching geo locations:', error);
     }
@@ -94,6 +92,7 @@ const useLocationFilter = () => {
     setGeoQuery(query);
     debouncedSearchGeo(query);
   };
+  // console.log('selectedGeoLocations',selectedGeoLocations)
 
   // Combine zip codes from selected cities, states, and geo-locations
   const getSelectedZipCodes = () => {

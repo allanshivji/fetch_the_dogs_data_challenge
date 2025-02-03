@@ -1,12 +1,12 @@
 import React, { useState, useEffect, JSX } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { 
-  Button, 
-  Container, 
-  Row, 
-  Col, 
-  Form, 
-  FormGroup, 
+import {
+  Button,
+  Container,
+  Row,
+  Col,
+  Form,
+  FormGroup,
   Label,
   Alert,
   Input,
@@ -18,6 +18,8 @@ import DogCard from '../components/DogCard';
 import PaginationComponent from './PaginationComponent';
 import LocationFilterComponent from './LocationFilterComponent';
 import MultiRangeSlider from './MultiRangeSlider';
+import ModalComponent from './Modal/ModalComponent';
+import TabsPanelComponent from './TabsPanel/TabsPanelComponent';
 
 interface RangeType {
   min: number;
@@ -28,18 +30,21 @@ const SearchPage: React.FC = () => {
   const [dogs, setDogs] = useState<any[]>([]);
   const [breeds, setBreeds] = useState<string[]>([]);
   const [selectedBreed, setSelectedBreed] = useState<string>('');
-  const [sortOrder, setSortOrder] = useState<any>({value: 'breed:asc', label: 'Breed Ascending'});
+  const [sortOrder, setSortOrder] = useState<any>({ value: 'breed:asc', label: 'Breed Ascending' });
   const [favorites, setFavorites] = useState<string[]>([]);
   const [page, setPage] = useState<number>(1);
   const [totalPages, setTotalPages] = useState<number>(1);
   const [error, setError] = useState<string | null>(null);
-  const [filterModalOpen, setFilterModalOpen] = useState<boolean>(false);
+  const [modalIsOpen, setModalIsOpen] = useState<boolean>(false);
   const [zipCodesFromFilter, setZipCodesFromFilter] = useState<string[]>([]);
-  const [ageRange, setAgeRange] = useState<RangeType>({ min:0, max:20 });
+  const [ageRange, setAgeRange] = useState<RangeType>({ min: 0, max: 20 });
+
+  const [allZipCodes, setAllZipCodes] = useState<string[]>([])
+  // const [api, setApi] = useState<any>({});
 
   const dogsPerPage = 24; // Number of dogs per page
   const maxPagesToShow = 5; // Number of page numbers to display at once
-  
+
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -60,6 +65,14 @@ const SearchPage: React.FC = () => {
     fetchInitialData();
   }, [page, selectedBreed, sortOrder, zipCodesFromFilter, ageRange]);
 
+  useEffect(() => {
+    if (allZipCodes.length !== 0) {
+      fetchDogs()
+      setPage(1)
+      handleToggleModal()
+    }
+  }, [allZipCodes])
+
   const fetchDogs = async () => {
     const params: any = {
       breeds: selectedBreed ? [selectedBreed] : [],
@@ -68,8 +81,10 @@ const SearchPage: React.FC = () => {
       sort: sortOrder.value,
       ageMin: ageRange.min,
       ageMax: ageRange.max,
-      zipCodes: [...zipCodesFromFilter]
+      // zipCodes: [...zipCodesFromFilter],
+      zipCodes: [...allZipCodes],
     };
+
     try {
       const response = await searchDogs(params);
       const dogDetails = await getDogsByIds(response.resultIds);
@@ -79,6 +94,11 @@ const SearchPage: React.FC = () => {
       setError('Error fetching dogs');
     }
   };
+
+  const handleAllZipCodes = (zipCodes: string[]) => {
+    setAllZipCodes(zipCodes)
+  }
+  console.log('AllzipCodes', allZipCodes)
 
   const handleAgeChange = (range: any) => {
     setAgeRange(range)
@@ -107,9 +127,7 @@ const SearchPage: React.FC = () => {
     }
   };
 
-  console.log('dogs',dogs)
-
-  const toggleFilterModal = () => setFilterModalOpen(!filterModalOpen)
+  const handleToggleModal = () => setModalIsOpen(!modalIsOpen)
 
   return (
     <Container>
@@ -157,58 +175,59 @@ const SearchPage: React.FC = () => {
         </FormGroup>
         <FormGroup>
           <Label for="slider">Select Value: {ageRange.min} - {ageRange.max}</Label>
-          <MultiRangeSlider minRangeValue={ageRange.min} maxRangeValue={ageRange.max} handleChange={handleAgeChange}  />
-          {/* <Input
-            type="range"
-            id="slider"
-            min="0"
-            max="20"
-            value={age || 20}
-            onChange={(e: any) => setAge(Number(e.target.value))}
-          /> */}
-        </FormGroup>
+            <MultiRangeSlider minRangeValue={ageRange.min} maxRangeValue={ageRange.max} handleChange={handleAgeChange} />
+          </FormGroup>
         <FormGroup>
           <LocationFilterComponent
             handleZipCodesFromFilter={handleZipCodesFromFilter}
           />
         </FormGroup>
       </Form>
-      {/* <Button color="primary" onClick={toggleFilterModal}>
-        Add More Filters
+      <Button color="primary" onClick={handleToggleModal}>
+        Search By Location
       </Button>
-      <Modal isOpen={filterModalOpen} toggle={toggleFilterModal}>
-        <ModalHeader toggle={toggleFilterModal}>Filters</ModalHeader>
+      <ModalComponent 
+        isModalOpen={modalIsOpen}
+        modalTitle={'Search By Location'}
+        handleToggleModal={handleToggleModal}
+        modalComponent={TabsPanelComponent}
+        handleAllZipCodes={handleAllZipCodes}
+      />
+
+      {/*<Modal isOpen={filterModalOpen} toggle={toggleFilterModal}>
+        <ModalHeader toggle={toggleFilterModal}>Search By Location</ModalHeader>
         <AdditionalFilters
           toggleFilterModal={toggleFilterModal}
-        />
-      </Modal> */}
+        /> 
+      </Modal>
+      */}
 
       {
-       dogs.length != 0 ?
-       <>
-        <Row>
-          {dogs.map((dog) => (
-            <Col key={dog.id} sm="12" md="6" lg="4" xl="3">
-              <DogCard dog={dog} onFavorite={() => handleFavorite(dog.id)} />
-            </Col>
-          ))}
-        </Row>
+        dogs.length != 0 ?
+          <>
+            <Row>
+              {dogs.map((dog) => (
+                <Col key={dog.id} sm="12" md="6" lg="4" xl="3">
+                  <DogCard dog={dog} onFavorite={() => handleFavorite(dog.id)} />
+                </Col>
+              ))}
+            </Row>
 
-        {/* Pagination */}
-        <div className="d-flex justify-content-center mt-4">
-          <PaginationComponent 
-            page={page}
-            setPage={setPage}
-            maxPagesToShow={maxPagesToShow}
-            totalPages={totalPages}
-          />
-        </div>
+            {/* Pagination */}
+            <div className="d-flex justify-content-center mt-4">
+              <PaginationComponent
+                page={page}
+                setPage={setPage}
+                maxPagesToShow={maxPagesToShow}
+                totalPages={totalPages}
+              />
+            </div>
 
-        <Button color="danger" onClick={handleGenerateMatch} className="mt-3 ml-3">
-          Generate Match
-        </Button>
-      </>
-      : 'No Dogs Found'
+            <Button color="danger" onClick={handleGenerateMatch} className="mt-3 ml-3">
+              Generate Match
+            </Button>
+          </>
+          : 'No Dogs Found'
       }
     </Container>
   );
