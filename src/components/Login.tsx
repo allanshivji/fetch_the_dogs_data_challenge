@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button, Container, Form, FormGroup, Label, Input, Alert } from 'reactstrap';
 import { login } from '../services/api';
 
-const LoginPage: React.FC = () => {
+const LoginPage = () => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [error, setError] = useState<string | null>(null);

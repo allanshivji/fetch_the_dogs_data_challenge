@@ -1,0 +1,17 @@
+import types from './types';
+import { SelectOption } from '../ts_types';
+
+export const updateCities = (cities: SelectOption[]) => ({
+  type: types.UPDATE_CITIES,
+  payload: cities,
+});
+
+export const updateStates = (states: SelectOption[]) => ({
+  type: types.UPDATE_STATES,
+  payload: states,
+});
+
+export const updateZipCodes = (zipCodes: SelectOption[]) => ({
+  type: types.UPDATE_ZIP_CODES,
+  payload: zipCodes,
+});

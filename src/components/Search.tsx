@@ -20,13 +20,13 @@ import LocationFilterComponent from './LocationFilterComponent';
 import MultiRangeSlider from './MultiRangeSlider';
 import ModalComponent from './Modal/ModalComponent';
 import TabsPanelComponent from './TabsPanel/TabsPanelComponent';
+import { FiltersState, RangeType, SelectOption, SearchPageProps } from '../ts_types';
+import DisplayAllFilters from './DisplayAllFilters';
 
-interface RangeType {
-  min: number;
-  max: number;
-}
+const SearchPage = (props: SearchPageProps) => {
 
-const SearchPage: React.FC = () => {
+  const { stateFilters } = props;
+
   const [dogs, setDogs] = useState<any[]>([]);
   const [breeds, setBreeds] = useState<string[]>([]);
   const [selectedBreed, setSelectedBreed] = useState<string>('');
@@ -95,10 +95,13 @@ const SearchPage: React.FC = () => {
     }
   };
 
-  const handleAllZipCodes = (zipCodes: string[]) => {
-    setAllZipCodes(zipCodes)
+  // const handleAllZipCodes = (zipCodes: string[]) => {
+  const handleApplyFilters = (allSelectedFilters: FiltersState) => {
+    const allZipCodesFromFilters = Object.values(allSelectedFilters).flat().map((item: SelectOption) => item.value)
+    setAllZipCodes(allZipCodesFromFilters)
+    // setAllZipCodes()
+    // tempSelectedFilters
   }
-  console.log('AllzipCodes', allZipCodes)
 
   const handleAgeChange = (range: any) => {
     setAgeRange(range)
@@ -178,9 +181,9 @@ const SearchPage: React.FC = () => {
             <MultiRangeSlider minRangeValue={ageRange.min} maxRangeValue={ageRange.max} handleChange={handleAgeChange} />
           </FormGroup>
         <FormGroup>
-          <LocationFilterComponent
+          {/* <LocationFilterComponent
             handleZipCodesFromFilter={handleZipCodesFromFilter}
-          />
+          /> */}
         </FormGroup>
       </Form>
       <Button color="primary" onClick={handleToggleModal}>
@@ -191,7 +194,10 @@ const SearchPage: React.FC = () => {
         modalTitle={'Search By Location'}
         handleToggleModal={handleToggleModal}
         modalComponent={TabsPanelComponent}
-        handleAllZipCodes={handleAllZipCodes}
+        handleApplyFilters={handleApplyFilters}
+      />
+      <DisplayAllFilters
+        stateFilters={stateFilters}
       />
 
       {/*<Modal isOpen={filterModalOpen} toggle={toggleFilterModal}>
@@ -206,7 +212,7 @@ const SearchPage: React.FC = () => {
         dogs.length != 0 ?
           <>
             <Row>
-              {dogs.map((dog) => (
+              {dogs.filter((dog) => dog).map((dog) => (
                 <Col key={dog.id} sm="12" md="6" lg="4" xl="3">
                   <DogCard dog={dog} onFavorite={() => handleFavorite(dog.id)} />
                 </Col>

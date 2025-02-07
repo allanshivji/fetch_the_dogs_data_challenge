@@ -1,39 +1,39 @@
 import { FC, useState, ReactNode } from "react";
 import { Nav, NavItem, NavLink, TabContent, TabPane, Container } from "reactstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
-import CityAndStateFilters from "../Filters/CityAndStateFilters";
-import ZipCodeFilter from "../Filters/ZipCodeFilter";
+
 import GeoLocationFilter from "../Filters/GeoLocationFilter";
-
-interface TabsPanelComponentProps {
-  handleAllZipCodes: (zipCodes: string[]) => void;
-}
-
-interface TabComponent {
-  id: number;
-  tabComponentTitle: string;
-  tabComponent: FC<{ handleAllZipCodes: (zipCodes: string[]) => void }>
-}
+import CityFilterContainer from "../Filters/CityFilterContainer";
+import StateFilterContainer from "../Filters/StateFilterContainer";
+import ZipCodeFilterContainer from "../Filters/ZipCodeFilterContainer";
+import { TabsPanelComponentProps, TabComponent } from '../../ts_types';
 
 const TabComponents = [
   {
     id: 1,
-    tabComponentTitle: 'City and State',
-    tabComponent: CityAndStateFilters
+    tabComponentTitle: 'City',
+    tabComponent: CityFilterContainer
   },
   {
     id: 2,
-    tabComponentTitle: 'Zip Code',
-    tabComponent: ZipCodeFilter
+    tabComponentTitle: 'State',
+    tabComponent: StateFilterContainer
   },
   {
     id: 3,
-    tabComponentTitle: 'Geo Location',
-    tabComponent: GeoLocationFilter
-  }
+    tabComponentTitle: 'Zip Code',
+    tabComponent: ZipCodeFilterContainer
+  },
+  // {
+  //   id: 4,
+  //   tabComponentTitle: 'Geo Location',
+  //   tabComponent: GeoLocationFilter
+  // }
 ]
 
-const TabsPanelComponent: FC<TabsPanelComponentProps> = ({ handleAllZipCodes }) => {
+const TabsPanelComponent = (props: TabsPanelComponentProps) => {
+
+  const {setTempSelectedFilters, tempSelectedFilters} = props
 
   const [activeTab, setActiveTab] = useState("1"); // Default active tab
 
@@ -57,7 +57,11 @@ const TabsPanelComponent: FC<TabsPanelComponentProps> = ({ handleAllZipCodes }) 
         {TabComponents.map((tabComponent: TabComponent) => {
           return (
             <TabPane tabId={String(tabComponent.id)} key={tabComponent.id}>
-                <tabComponent.tabComponent handleAllZipCodes={handleAllZipCodes} />
+                {/* <tabComponent.tabComponent handleAllZipCodes={ModalComponentProps} /> */}
+                <tabComponent.tabComponent 
+                  tempSelectedFilters={tempSelectedFilters}
+                  setTempSelectedFilters={setTempSelectedFilters}
+                />
             </TabPane>
           )
         })}

@@ -1,6 +1,6 @@
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Login from './components/Login';
-import Search from './components/Search';
+import SearchContainer from './components/SearchContainer';
 
 const App = () => {
 
@@ -8,7 +8,7 @@ const App = () => {
     <Router>
       <Routes>
         <Route path="/" element={<Login />} />
-        <Route path="/search" element={<Search />} />
+        <Route path="/search" element={<SearchContainer />} />
       </Routes>
     </Router>
   );
