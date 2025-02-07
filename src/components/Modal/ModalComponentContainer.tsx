@@ -1,11 +1,15 @@
 import { connect } from 'react-redux';
-import { updateCities, updateStates, updateZipCodes, updateGeoLocations } from '../actions';
+import { updateCities, updateStates, updateZipCodes, updateGeoLocations } from '../../actions';
 
-import { SelectOption } from '../ts_types';
-import SearchPage from './SearchPage';
+import { SelectOption } from '../../ts_types';
+import ModalComponent from './ModalComponent';
 
 const mapStateToProps = (state: any, ownProps: any) => ({
-  stateFilters: state.filters
+  isModalOpen: ownProps.isModalOpen,
+  modalTitle: ownProps.modalTitle,
+  handleToggleModal: ownProps.handleToggleModal,
+  handleApplyFilters: ownProps.handleApplyFilters,
+  modalComponent: ownProps.modalComponent
 });
 
 const mapDispatchStateToProps = (dispatch: any) => ({
@@ -13,9 +17,9 @@ const mapDispatchStateToProps = (dispatch: any) => ({
   updateStates: (states: SelectOption[]) => dispatch(updateStates(states)),
   updateZipCodes: (zipCodes: SelectOption[]) => dispatch(updateZipCodes(zipCodes)),
   updateGeoLocations: (geoLocations: SelectOption[]) => dispatch(updateGeoLocations(geoLocations))
-})
+});
 
 export default connect(
   mapStateToProps,
   mapDispatchStateToProps
-)(SearchPage);
+)(ModalComponent);

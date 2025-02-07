@@ -5,6 +5,7 @@ const initialState: FiltersState = {
   selectedCities: [],
   selectedStates: [],
   selectedZipCodes: [],
+  selectedGeoLocations: []
 };
 
 const filtersReducer = (state = initialState, action: any): FiltersState => {
@@ -17,6 +18,9 @@ const filtersReducer = (state = initialState, action: any): FiltersState => {
 
     case types.UPDATE_ZIP_CODES:
       return { ...state, selectedZipCodes: action.payload };
+
+    case types.UPDATE_GEO_LOCATIONS:
+      return { ...state, selectedGeoLocations: action.payload };
 
     case types.CLEAR_ALL_FILTERS:
       return initialState;

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, JSX } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   Button,
@@ -8,24 +8,22 @@ import {
   Form,
   FormGroup,
   Label,
-  Alert,
-  Input,
-  Modal, ModalHeader
+  Alert
 } from 'reactstrap';
 import Select from 'react-select';
 import { getBreeds, searchDogs, getDogsByIds, matchDogs } from '../services/api';
-import DogCard from '../components/DogCard';
+import DogCard from './DogCard';
 import PaginationComponent from './PaginationComponent';
 import LocationFilterComponent from './LocationFilterComponent';
 import MultiRangeSlider from './MultiRangeSlider';
-import ModalComponent from './Modal/ModalComponent';
 import TabsPanelComponent from './TabsPanel/TabsPanelComponent';
 import { FiltersState, RangeType, SelectOption, SearchPageProps } from '../ts_types';
 import DisplayAllFilters from './DisplayAllFilters';
+import ModalComponentContainer from './Modal/ModalComponentContainer';
 
 const SearchPage = (props: SearchPageProps) => {
 
-  const { stateFilters } = props;
+  const { stateFilters, updateCities, updateStates, updateZipCodes, updateGeoLocations } = props;
 
   const [dogs, setDogs] = useState<any[]>([]);
   const [breeds, setBreeds] = useState<string[]>([]);
@@ -66,11 +64,7 @@ const SearchPage = (props: SearchPageProps) => {
   }, [page, selectedBreed, sortOrder, zipCodesFromFilter, ageRange]);
 
   useEffect(() => {
-    if (allZipCodes.length !== 0) {
-      fetchDogs()
-      setPage(1)
-      handleToggleModal()
-    }
+    fetchDogs()
   }, [allZipCodes])
 
   const fetchDogs = async () => {
@@ -96,11 +90,13 @@ const SearchPage = (props: SearchPageProps) => {
   };
 
   // const handleAllZipCodes = (zipCodes: string[]) => {
-  const handleApplyFilters = (allSelectedFilters: FiltersState) => {
+  const handleApplyFilters = (allSelectedFilters: FiltersState, doNotToggleModal?: boolean) => {
     const allZipCodesFromFilters = Object.values(allSelectedFilters).flat().map((item: SelectOption) => item.value)
     setAllZipCodes(allZipCodesFromFilters)
-    // setAllZipCodes()
-    // tempSelectedFilters
+    if (!doNotToggleModal) {
+      setPage(1)
+      handleToggleModal()
+    }
   }
 
   const handleAgeChange = (range: any) => {
@@ -189,16 +185,23 @@ const SearchPage = (props: SearchPageProps) => {
       <Button color="primary" onClick={handleToggleModal}>
         Search By Location
       </Button>
-      <ModalComponent 
+      <ModalComponentContainer
         isModalOpen={modalIsOpen}
         modalTitle={'Search By Location'}
         handleToggleModal={handleToggleModal}
         modalComponent={TabsPanelComponent}
         handleApplyFilters={handleApplyFilters}
       />
-      <DisplayAllFilters
-        stateFilters={stateFilters}
-      />
+      { allZipCodes.length > 0 &&
+        <DisplayAllFilters
+          stateFilters={stateFilters}
+          handleApplyFilters={handleApplyFilters}
+          updateCities={updateCities}
+          updateStates={updateStates}
+          updateZipCodes={updateZipCodes}
+          updateGeoLocations={updateGeoLocations}
+        />
+      }
 
       {/*<Modal isOpen={filterModalOpen} toggle={toggleFilterModal}>
         <ModalHeader toggle={toggleFilterModal}>Search By Location</ModalHeader>
@@ -209,7 +212,7 @@ const SearchPage = (props: SearchPageProps) => {
       */}
 
       {
-        dogs.length != 0 ?
+        dogs.length !== 0 ?
           <>
             <Row>
               {dogs.filter((dog) => dog).map((dog) => (

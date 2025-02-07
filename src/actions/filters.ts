@@ -15,3 +15,8 @@ export const updateZipCodes = (zipCodes: SelectOption[]) => ({
   type: types.UPDATE_ZIP_CODES,
   payload: zipCodes,
 });
+
+export const updateGeoLocations = (geoLocations: SelectOption[]) => ({
+  type: types.UPDATE_GEO_LOCATIONS,
+  payload: geoLocations,
+});

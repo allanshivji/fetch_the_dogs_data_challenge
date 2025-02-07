@@ -1,32 +1,38 @@
-import { useState } from "react";
-
 import { FiltersState, DisplayAllFiltersProps, SelectOption } from "../ts_types";
 
 const DisplayAllFilters = (props: DisplayAllFiltersProps) => {
-  const { stateFilters } = props;
-  console.log('stateFilters',stateFilters)
-  const [data, setData] = useState<any>(stateFilters);
+  const { 
+    stateFilters,
+    handleApplyFilters,
+    updateCities,
+    updateStates,
+    updateZipCodes,
+    updateGeoLocations
+  } = props;
 
-  // Function to handle tile removal
-  // const removeTile = (key: string, labelToRemove) => {
-    // setData((prevData) => {
-    //   return {
-    //     ...prevData,
-    //     [key]: prevData[key].filter((item) => item.label !== labelToRemove),
-    //   };
-    // });
-  // };
+  const removeFilter = (key: string, labelToRemove: string) => {
+    const filtersAfterRemoval = { 
+      ...stateFilters,
+      [key]: stateFilters[key as keyof FiltersState].filter((item: SelectOption) => item.label !== labelToRemove)
+    }
+    updateCities(filtersAfterRemoval.selectedCities)
+    updateStates(filtersAfterRemoval.selectedStates)
+    updateZipCodes(filtersAfterRemoval.selectedZipCodes)
+    updateGeoLocations(filtersAfterRemoval.selectedGeoLocations)
+    handleApplyFilters(filtersAfterRemoval, true)
+  };
 
   return (
     <div>
-      {/* Iterate over each key in the data */}
-      {Object.keys(data).map((key) => (
+      {/* {Object.keys(allFilters).map((key) => ( */}
+      {Object.keys(stateFilters).map((key) => (
         <div key={key}>
-          <h3>{key.toUpperCase()}:</h3>
+          {/* <h3>{key.toUpperCase()}:</h3> */}
           {/* Render the labels as tiles with X button */}
           <div>
-            {data[key].map((item: SelectOption) => (
-              <span key={item.label} style={{ margin: '5px', display: 'inline-block' }}>
+            {/* {allFilters[key as keyof FiltersState].map((option: SelectOption) => ( */}
+            {stateFilters[key as keyof FiltersState].map((option: SelectOption) => (
+              <span key={option.label} style={{ margin: '5px', display: 'inline-block' }}>
                 <span
                   style={{
                     padding: '5px 10px',
@@ -37,9 +43,9 @@ const DisplayAllFilters = (props: DisplayAllFiltersProps) => {
                     alignItems: 'center',
                   }}
                 >
-                  {item.label}
+                  {option.label}
                   <button
-                    // onClick={() => removeTile(key, item.label)}
+                    onClick={() => removeFilter(key, option.label)}
                     style={{
                       marginLeft: '5px',
                       backgroundColor: 'transparent',

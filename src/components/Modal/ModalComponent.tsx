@@ -1,9 +1,7 @@
-import { FC, useState } from 'react';
-import { connect } from 'react-redux';
+import { useState } from 'react';
 import { Button, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
 
-import { updateCities, updateStates, updateZipCodes } from '../../actions';
-import { ModalComponentProps, FiltersState, SelectOption } from '../../ts_types'
+import { ModalComponentProps, FiltersState } from '../../ts_types'
 
 const ModalComponent = (props: ModalComponentProps) => {
 
@@ -15,20 +13,22 @@ const ModalComponent = (props: ModalComponentProps) => {
     modalComponent: ModalComponent,
     updateCities,
     updateStates,
-    updateZipCodes
+    updateZipCodes,
+    updateGeoLocations
   } = props
 
-  const [tempSelectedFilters, setTempSelectedFilters] = useState<FiltersState>({ selectedCities: [], selectedStates: [], selectedZipCodes: [] })
+  const [tempSelectedFilters, setTempSelectedFilters] = useState<FiltersState>({ selectedCities: [], selectedStates: [], selectedZipCodes: [], selectedGeoLocations: [] })
 
   const handleApplyChanges = () => {
     updateCities(tempSelectedFilters.selectedCities)
     updateStates(tempSelectedFilters.selectedStates)
     updateZipCodes(tempSelectedFilters.selectedZipCodes)
+    updateGeoLocations(tempSelectedFilters.selectedGeoLocations)
     handleApplyFilters(tempSelectedFilters)
   }
 
   return (
-     <Modal isOpen={isModalOpen} toggle={handleToggleModal}>
+     <Modal isOpen={isModalOpen} toggle={handleToggleModal} size='lg'>
       <ModalHeader toggle={handleToggleModal}>{modalTitle}</ModalHeader>
       <ModalBody>
         <ModalComponent 
@@ -37,22 +37,10 @@ const ModalComponent = (props: ModalComponentProps) => {
         />
       </ModalBody>
       <ModalFooter>
-        {/* <Button onClick={handleAllZipCodes}>Apply Changes</Button> */}
         <Button onClick={handleApplyChanges}>Apply Changes</Button>
       </ModalFooter>
     </Modal> 
   )
 }
 
-const mapDispatchStateToProps = (dispatch: any) => ({
-  updateCities: (cities: SelectOption[]) => dispatch(updateCities(cities)),
-  updateStates: (states: SelectOption[]) => dispatch(updateStates(states)),
-  updateZipCodes: (zipCodes: SelectOption[]) => dispatch(updateZipCodes(zipCodes))
-})
-
-export default connect(
-  null,
-  mapDispatchStateToProps
-)(ModalComponent);
-
-// export default ModalComponent;
+export default ModalComponent;
