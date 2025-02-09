@@ -86,10 +86,7 @@ const GeoLocationFilter = (props: GeoLocationFilterProps) => {
     return (
       <div className="p-4 border border-red-500 bg-red-100 rounded-md">
         <h3 className="text-red-700 font-semibold mb-2">Configuration Error</h3>
-        <p className="text-red-600">
-          Google Maps API key is missing. Please add
-          REACT_APP_GOOGLE_MAPS_API_KEY to your environment variables.
-        </p>
+        <p className="text-red-600">Error in displaying Google Maps.</p>
       </div>
     );
   }
@@ -102,7 +99,7 @@ const GeoLocationFilter = (props: GeoLocationFilterProps) => {
         </h3>
         <p className="text-red-600">
           {loadError.message ||
-            'Failed to load Google Maps. Please check your API key and try again.'}
+            'Failed to load Google Maps. Please try again later.'}
         </p>
       </div>
     );
