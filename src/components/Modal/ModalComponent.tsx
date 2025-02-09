@@ -20,7 +20,6 @@ const ModalComponent = <T extends object = {}>(props: ModalComponentProps) => {
     updateZipCodes,
     updateGeoLocations
   } = props
-  console.log('Props', props, showApplyAllButton || showResetButton, showApplyAllButton && 'Apply', showResetButton && 'Reset')
 
   const [tempSelectedFilters, setTempSelectedFilters] = useState<FiltersState>({ selectedCities: [], selectedStates: [], selectedZipCodes: [], selectedGeoLocations: [] })
 

@@ -3,7 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import {
   Button,
   Container,
-  Alert
+  Alert,
+  Spinner
 } from 'reactstrap';
 import { getBreeds, searchDogs, getDogsByIds, matchDogs, logout } from '../services/api';
 import DogCard from './DogCard';
@@ -31,6 +32,7 @@ const SearchPage = (props: SearchPageProps) => {
     clearAllFavorites
   } = props;
 
+  const [isLoading, setIsLoading] = useState<boolean>(false)
   const [dogs, setDogs] = useState<any[]>([]);
   const [breeds, setBreeds] = useState<string[]>([]);
   const [selectedBreed, setSelectedBreed] = useState<SelectOption[]>([]);
@@ -81,6 +83,7 @@ const SearchPage = (props: SearchPageProps) => {
 
 
   const fetchDogs = async () => {
+    setIsLoading(true)
     const params: any = {
       breeds: selectedBreed.length > 0 ? [...selectedBreed.map((option: SelectOption) => option.value)] : [],
       size: dogsPerPage,
@@ -98,6 +101,8 @@ const SearchPage = (props: SearchPageProps) => {
       setTotalRecords(response.total)
     } catch (err) {
       setError('Error fetching dogs');
+    } finally {
+      setIsLoading(false)
     }
   };
 
@@ -255,7 +260,13 @@ const SearchPage = (props: SearchPageProps) => {
         />
       }
       {
-        dogs.length !== 0 ?
+        isLoading ?
+        (
+          <div className="d-flex justify-content-center my-5">
+            <Spinner color="primary" />
+          </div>
+        ) : dogs.length !== 0 ? 
+        (
           <>
             <DogsGrid
               dogs={dogs}
@@ -272,8 +283,31 @@ const SearchPage = (props: SearchPageProps) => {
               />
             </div>
           </>
-          : 'No Dogs Found'
+        ) :
+        (
+          <div className="text-center my-5">No Dogs Found</div>
+        )
       }
+      {/* {
+        dogs.length !== 0 ?
+          <>
+            <DogsGrid
+              dogs={dogs}
+              handleFavorite={handleFavorite}
+              favoritesFromState={favoritesFromState}
+            />
+            <div className="d-flex justify-content-center mt-4">
+              <PaginationComponent
+                currentPage={currentPage}
+                setCurrentPage={setCurrentPage}
+                dogsPerPage={dogsPerPage}
+                total={totalRecords}
+              />
+            </div>
+          </>
+          : 'No Dogs Found'
+      } */}
+      
     </Container>
   );
 };
