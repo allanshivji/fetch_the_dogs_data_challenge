@@ -1,9 +1,11 @@
 import Select from 'react-select';
-import { Label } from 'reactstrap'
+import { Label } from 'reactstrap';
 
 import { DropdownComponentProps, DropdownValue } from '../ts_types';
 
-const DropdownComponent = <T extends boolean>(props: DropdownComponentProps<T>) => {
+const DropdownComponent = <T extends boolean>(
+  props: DropdownComponentProps<T>
+) => {
   const {
     id,
     label,
@@ -32,7 +34,7 @@ const DropdownComponent = <T extends boolean>(props: DropdownComponentProps<T>) 
         options={dropdownOptions}
       />
     </>
-  )
-}
+  );
+};
 
 export default DropdownComponent;

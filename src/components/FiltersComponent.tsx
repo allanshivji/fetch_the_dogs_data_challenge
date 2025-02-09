@@ -1,9 +1,8 @@
 import DropdownFilter from './DropdownFilter';
 import MultiRangeSlider from './MultiRangeSlider';
-import { FiltersComponentProps } from '../ts_types'
+import { FiltersComponentProps } from '../ts_types';
 
 const FiltersComponent = (props: FiltersComponentProps) => {
-
   const {
     breeds,
     setSelectedBreed,
@@ -22,12 +21,10 @@ const FiltersComponent = (props: FiltersComponentProps) => {
         placeHolder={'Breed'}
         isClearable={true}
         isMultiSelect={true}
-        dropdownOptions={
-          breeds.map((breed: string) => ({
-            value: breed,
-            label: breed
-          }))
-        }
+        dropdownOptions={breeds.map((breed: string) => ({
+          value: breed,
+          label: breed
+        }))}
         setChange={setSelectedBreed}
       />
       <DropdownFilter<false>
@@ -41,11 +38,11 @@ const FiltersComponent = (props: FiltersComponentProps) => {
           { value: 'breed:asc', label: 'Breed Ascending' },
           { value: 'breed:desc', label: 'Breed Descending' },
           { value: 'name:asc', label: 'Name Ascending' },
-          { value: 'name:desc', label: 'Name Descending' },
+          { value: 'name:desc', label: 'Name Descending' }
         ]}
         setChange={setSortOrder}
       />
-      <MultiRangeSlider 
+      <MultiRangeSlider
         id={'slider'}
         label={'Age Range'}
         ageRange={ageRange}
@@ -53,7 +50,7 @@ const FiltersComponent = (props: FiltersComponentProps) => {
         setCurrentPage={setCurrentPage}
       />
     </>
-  )
-}
+  );
+};
 
 export default FiltersComponent;

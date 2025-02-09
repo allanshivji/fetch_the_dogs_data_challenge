@@ -1,5 +1,5 @@
-import types from '../actions/types'
-import { FiltersState } from '../ts_types'
+import types from '../actions/types';
+import { FiltersState } from '../ts_types';
 
 const initialState: FiltersState = {
   selectedCities: [],

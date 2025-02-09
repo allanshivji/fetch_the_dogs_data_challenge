@@ -23,13 +23,8 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
-  },
-  "eslintConfig": {
-    "extends": [
-      "react-app",
-      "react-app/jest"
-    ]
+    "eject": "react-scripts eject",
+    "prettier": "npx pretty-quick --staged --pattern 'src/**/*.ts' --pattern 'src/**/*.tsx' --pattern 'src/**/*.json' --pattern 'src/**/*.css'"
   },
   "browserslist": {
     "production": [
@@ -48,6 +43,15 @@
     "@types/node": "^22.12.0",
     "@types/react": "^19.0.8",
     "@types/react-dom": "^19.0.3",
-    "typescript": "^5.7.3"
+    "eslint-config-prettier": "^10.0.1",
+    "eslint-config-react-app": "^7.0.1",
+    "eslint-plugin-prettier": "^5.2.3",
+    "eslint-plugin-react": "^7.37.4",
+    "eslint-plugin-react-hooks": "^5.1.0",
+    "husky": "^8.0.3",
+    "lint-staged": "^15.4.3",
+    "prettier": "^3.5.0",
+    "pretty-quick": "^4.0.0",
+    "typescript": "^5.1.6"
   }
 }

@@ -1,4 +1,3 @@
-
 export const debounceSearch = (func: (...args: any[]) => void) => {
   let timer: NodeJS.Timeout;
   return (...args: any[]) => {

@@ -4,13 +4,13 @@ const API_URL = 'https://frontend-take-home-service.fetch.com';
 
 export const api = axios.create({
   baseURL: API_URL,
-  withCredentials: true, // for sending cookies with each request
+  withCredentials: true // for sending cookies with each request
 });
 
 // Authentication
 export const login = async (name: string, email: string) => {
   const response = await api.post('/auth/login', { name, email });
-  return response.status === 200
+  return response.status === 200;
 };
 
 export const logout = async () => {
@@ -49,12 +49,22 @@ export const getLocationsByZip = async (zipCodes: string[]) => {
 
 // Search Locations by City and State
 export const searchLocations = async (query: any) => {
-  const response = await api.post('/locations/search', query );
+  const response = await api.post('/locations/search', query);
   return response.data;
 };
 
 // Search Locations by Geographic Bounding Box (latitude/longitude)
-export const searchLocationsByBounds = async (lat1: number, lon1: number, lat2: number, lon2: number) => {
-  const response = await api.post('/locations/search', { lat1, lon1, lat2, lon2 });
+export const searchLocationsByBounds = async (
+  lat1: number,
+  lon1: number,
+  lat2: number,
+  lon2: number
+) => {
+  const response = await api.post('/locations/search', {
+    lat1,
+    lon1,
+    lat2,
+    lon2
+  });
   return response.data;
 };

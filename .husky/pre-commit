@@ -1,0 +1,6 @@
+# #!/usr/bin/env sh
+# . "$(dirname -- "$0")/_/husky.sh"
+
+# npm test
+
+npx pretty-quick --staged --pattern 'src/**/*.ts' --pattern 'src/**/*.tsx' --pattern 'src/**/*.json' --pattern 'src/**/*.css'

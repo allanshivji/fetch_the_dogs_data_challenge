@@ -1,9 +1,7 @@
-import { FilterTagProps } from '../ts_types'
+import { FilterTagProps } from '../ts_types';
 
 const FilterTag = (props: FilterTagProps) => {
-  const {
-    filterKey, option, removeFilter 
-  } = props;
+  const { filterKey, option, removeFilter } = props;
 
   return (
     <span key={option.label} style={{ margin: '5px', display: 'inline-block' }}>
@@ -14,7 +12,7 @@ const FilterTag = (props: FilterTagProps) => {
           borderRadius: '15px',
           backgroundColor: '#f0f0f0',
           display: 'inline-flex',
-          alignItems: 'center',
+          alignItems: 'center'
         }}
       >
         {option.label}
@@ -25,14 +23,14 @@ const FilterTag = (props: FilterTagProps) => {
             backgroundColor: 'transparent',
             border: 'none',
             cursor: 'pointer',
-            color: 'red',
+            color: 'red'
           }}
         >
           X
         </button>
       </span>
     </span>
-  )
+  );
 };
 
 export default FilterTag;

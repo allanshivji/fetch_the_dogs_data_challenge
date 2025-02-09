@@ -8,7 +8,4 @@ const mapStateToProps = (state: any, ownProps: any) => ({
   selectedZipCodes: state.filters.selectedZipCodes
 });
 
-export default connect(
-  mapStateToProps,
-  null
-)(ZipCodeFilter);
+export default connect(mapStateToProps, null)(ZipCodeFilter);

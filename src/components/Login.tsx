@@ -1,9 +1,17 @@
 import { useState, FormEvent } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Button, Container, Form, FormGroup, Label, Input, Alert } from 'reactstrap';
+import {
+  Button,
+  Container,
+  Form,
+  FormGroup,
+  Label,
+  Input,
+  Alert
+} from 'reactstrap';
 
 import { login } from '../services/api';
-import { FormErrors } from '../ts_types'
+import { FormErrors } from '../ts_types';
 
 const LoginPage = () => {
   const [formData, setFormData] = useState({
@@ -17,7 +25,7 @@ const LoginPage = () => {
 
   const validateForm = (): boolean => {
     const newErrors: FormErrors = {};
-    
+
     // Name validation
     if (!formData.name.trim()) {
       newErrors.name = 'Name is required';
@@ -39,14 +47,14 @@ const LoginPage = () => {
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
       [name]: value
     }));
 
     // Clear error when user starts typing
     if (errors[name as keyof FormErrors]) {
-      setErrors(prev => ({
+      setErrors((prev) => ({
         ...prev,
         [name]: undefined
       }));
@@ -68,14 +76,18 @@ const LoginPage = () => {
     try {
       setIsSubmitting(true);
       const success = await login(formData.name, formData.email);
-      
+
       if (success) {
         navigate('/search');
       } else {
-        setSubmitError('Failed to authenticate. Please check your credentials.');
+        setSubmitError(
+          'Failed to authenticate. Please check your credentials.'
+        );
       }
     } catch (err) {
-      setSubmitError('An error occurred while logging in. Please try again later.');
+      setSubmitError(
+        'An error occurred while logging in. Please try again later.'
+      );
     } finally {
       setIsSubmitting(false);
     }
@@ -84,7 +96,7 @@ const LoginPage = () => {
   return (
     <Container>
       <h2 className="my-4">Login to Find Your Dog</h2>
-        {submitError && <Alert color="danger">{submitError}</Alert>}
+      {submitError && <Alert color="danger">{submitError}</Alert>}
       <Form onSubmit={handleSubmit}>
         <FormGroup>
           <Label for="name">Name</Label>
@@ -116,11 +128,7 @@ const LoginPage = () => {
             <div className="text-danger small mt-1">{errors.email}</div>
           )}
         </FormGroup>
-        <Button 
-          color="primary" 
-          type="submit" 
-          disabled={isSubmitting}
-        >
+        <Button color="primary" type="submit" disabled={isSubmitting}>
           {isSubmitting ? 'Logging in...' : 'Login'}
         </Button>
       </Form>

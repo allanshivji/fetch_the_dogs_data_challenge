@@ -1,12 +1,12 @@
-import { SelectOption, FiltersState, DisplayAllFiltersViewProps } from '../ts_types';
+import {
+  SelectOption,
+  FiltersState,
+  DisplayAllFiltersViewProps
+} from '../ts_types';
 import FilterTag from './FilterTag';
 
 const DisplayAllFiltersView = (props: DisplayAllFiltersViewProps) => {
-
-  const {
-    stateFilters, 
-    removeFilter
-  } = props;
+  const { stateFilters, removeFilter } = props;
 
   return (
     <div className="flex flex-wrap gap-2">

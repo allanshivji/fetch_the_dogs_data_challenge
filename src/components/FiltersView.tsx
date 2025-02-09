@@ -4,7 +4,7 @@ import DisplayAllFiltersView from './DisplayAllFiltersView';
 import { FiltersState, SelectOption, FiltersViewProps } from '../ts_types';
 
 const FiltersView = (props: FiltersViewProps) => {
-  const { 
+  const {
     isModalOpen,
     stateFilters,
     handleApplyFilters,
@@ -21,14 +21,16 @@ const FiltersView = (props: FiltersViewProps) => {
       selectedStates: [],
       selectedZipCodes: [],
       selectedGeoLocations: []
-    }
-    handleApplyFilters(initialFiltersState, true)
-  }
+    };
+    handleApplyFilters(initialFiltersState, true);
+  };
 
   const removeFilter = (key: string, labelToRemove: string) => {
-    const filtersAfterRemoval = { 
+    const filtersAfterRemoval = {
       ...stateFilters,
-      [key]: stateFilters[key as keyof FiltersState].filter((item: SelectOption) => item.label !== labelToRemove)
+      [key]: stateFilters[key as keyof FiltersState].filter(
+        (item: SelectOption) => item.label !== labelToRemove
+      )
     };
     updateCities(filtersAfterRemoval.selectedCities);
     updateStates(filtersAfterRemoval.selectedStates);
@@ -36,17 +38,17 @@ const FiltersView = (props: FiltersViewProps) => {
     updateGeoLocations(filtersAfterRemoval.selectedGeoLocations);
     handleApplyFilters(filtersAfterRemoval, true);
   };
-  
+
   const filterArrays = Object.values(stateFilters) as SelectOption[][];
   const totalFilters = filterArrays.reduce(
     (acc, filters) => acc + filters.length,
     0
-  );;
+  );
 
   // Get first 5 filters for display
   const visibleFilters = [];
   let count = 0;
-  
+
   for (const key of Object.keys(stateFilters)) {
     for (const option of stateFilters[key as keyof FiltersState]) {
       if (count < 5) {
@@ -60,14 +62,14 @@ const FiltersView = (props: FiltersViewProps) => {
     <div className="space-y-2">
       <div className="flex flex-wrap items-center gap-2">
         {visibleFilters.map(({ key, option }) => (
-          <FilterTag 
-            key={`${key}-${option.label}`} 
-            filterKey={key} 
+          <FilterTag
+            key={`${key}-${option.label}`}
+            filterKey={key}
             option={option}
             removeFilter={removeFilter}
           />
         ))}
-        
+
         {totalFilters > 5 && (
           <>
             <button

@@ -1,9 +1,9 @@
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+
 import Login from './components/Login';
 import SearchContainer from './components/SearchContainer';
 
 const App = () => {
-
   return (
     <Router>
       <Routes>

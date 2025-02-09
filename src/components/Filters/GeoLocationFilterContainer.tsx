@@ -7,7 +7,4 @@ const mapStateToProps = (state: any, ownProps: any) => ({
   setTempSelectedFilters: ownProps.setTempSelectedFilters
 });
 
-export default connect(
-  mapStateToProps,
-  null
-)(GeoLocationFilter);
+export default connect(mapStateToProps, null)(GeoLocationFilter);

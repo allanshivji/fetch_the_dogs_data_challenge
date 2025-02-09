@@ -8,7 +8,4 @@ const mapStateToProps = (state: any, ownProps: any) => ({
   selectedCities: state.filters.selectedCities
 });
 
-export default connect(
-  mapStateToProps,
-  null
-)(CityFilter);
+export default connect(mapStateToProps, null)(CityFilter);

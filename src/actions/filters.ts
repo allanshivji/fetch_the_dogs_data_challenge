@@ -3,24 +3,24 @@ import { SelectOption } from '../ts_types';
 
 export const updateCities = (cities: SelectOption[]) => ({
   type: types.UPDATE_CITIES,
-  payload: cities,
+  payload: cities
 });
 
 export const updateStates = (states: SelectOption[]) => ({
   type: types.UPDATE_STATES,
-  payload: states,
+  payload: states
 });
 
 export const updateZipCodes = (zipCodes: SelectOption[]) => ({
   type: types.UPDATE_ZIP_CODES,
-  payload: zipCodes,
+  payload: zipCodes
 });
 
 export const updateGeoLocations = (geoLocations: SelectOption[]) => ({
   type: types.UPDATE_GEO_LOCATIONS,
-  payload: geoLocations,
+  payload: geoLocations
 });
 
 export const clearLocationFilters = () => ({
   type: types.CLEAR_ALL_FILTERS
-})
+});

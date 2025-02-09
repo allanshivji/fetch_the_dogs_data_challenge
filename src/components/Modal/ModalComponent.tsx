@@ -1,12 +1,11 @@
 import { useState } from 'react';
 import { Button, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
 
-import { ModalComponentProps, FiltersState } from '../../ts_types'
+import { ModalComponentProps, FiltersState } from '../../ts_types';
 
 const ModalComponent = <T extends object = {}>(props: ModalComponentProps) => {
-
   const {
-    isModalOpen,  
+    isModalOpen,
     modalTitle,
     handleToggleModal,
     handleApplyFilters,
@@ -19,36 +18,55 @@ const ModalComponent = <T extends object = {}>(props: ModalComponentProps) => {
     updateStates,
     updateZipCodes,
     updateGeoLocations
-  } = props
+  } = props;
 
-  const [tempSelectedFilters, setTempSelectedFilters] = useState<FiltersState>({ selectedCities: [], selectedStates: [], selectedZipCodes: [], selectedGeoLocations: [] })
+  const [tempSelectedFilters, setTempSelectedFilters] = useState<FiltersState>({
+    selectedCities: [],
+    selectedStates: [],
+    selectedZipCodes: [],
+    selectedGeoLocations: []
+  });
 
   const handleApplyChanges = () => {
-    updateCities(tempSelectedFilters.selectedCities)
-    updateStates(tempSelectedFilters.selectedStates)
-    updateZipCodes(tempSelectedFilters.selectedZipCodes)
-    updateGeoLocations(tempSelectedFilters.selectedGeoLocations)
-    handleApplyFilters(tempSelectedFilters)
-  }
+    updateCities(tempSelectedFilters.selectedCities);
+    updateStates(tempSelectedFilters.selectedStates);
+    updateZipCodes(tempSelectedFilters.selectedZipCodes);
+    updateGeoLocations(tempSelectedFilters.selectedGeoLocations);
+    handleApplyFilters(tempSelectedFilters);
+  };
 
   return (
-     <Modal isOpen={isModalOpen} toggle={() => handleToggleModal(null)} size='lg'>
-      <ModalHeader toggle={() => handleToggleModal(null)}>{modalTitle}</ModalHeader>
+    <Modal
+      isOpen={isModalOpen}
+      toggle={() => handleToggleModal(null)}
+      size="lg"
+    >
+      <ModalHeader toggle={() => handleToggleModal(null)}>
+        {modalTitle}
+      </ModalHeader>
       <ModalBody>
-        <ModalComponent 
+        <ModalComponent
           tempSelectedFilters={tempSelectedFilters}
           setTempSelectedFilters={setTempSelectedFilters}
           {...(modalComponentProps as T)}
         />
       </ModalBody>
-      {(showApplyAllButton || showResetButton) &&
+      {(showApplyAllButton || showResetButton) && (
         <ModalFooter className="justify-content-between">
-          {showResetButton && <Button color="secondary" onClick={handleResetChanges}>Reset Locations</Button>}
-          {showApplyAllButton && <Button color="primary" onClick={handleApplyChanges}>Apply Changes</Button>}
-      </ModalFooter>
-      }
-    </Modal> 
-  )
-}
+          {showResetButton && (
+            <Button color="secondary" onClick={handleResetChanges}>
+              Reset Locations
+            </Button>
+          )}
+          {showApplyAllButton && (
+            <Button color="primary" onClick={handleApplyChanges}>
+              Apply Changes
+            </Button>
+          )}
+        </ModalFooter>
+      )}
+    </Modal>
+  );
+};
 
 export default ModalComponent;
