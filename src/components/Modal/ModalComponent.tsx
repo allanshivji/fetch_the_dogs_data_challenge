@@ -13,12 +13,14 @@ const ModalComponent = <T extends object = {}>(props: ModalComponentProps) => {
     handleResetChanges,
     modalComponent: ModalComponent,
     modalComponentProps = {} as T,
-    hideModalFooter,
+    showApplyAllButton,
+    showResetButton,
     updateCities,
     updateStates,
     updateZipCodes,
     updateGeoLocations
   } = props
+  console.log('Props', props, showApplyAllButton || showResetButton, showApplyAllButton && 'Apply', showResetButton && 'Reset')
 
   const [tempSelectedFilters, setTempSelectedFilters] = useState<FiltersState>({ selectedCities: [], selectedStates: [], selectedZipCodes: [], selectedGeoLocations: [] })
 
@@ -40,13 +42,10 @@ const ModalComponent = <T extends object = {}>(props: ModalComponentProps) => {
           {...(modalComponentProps as T)}
         />
       </ModalBody>
-      {!hideModalFooter &&
-        // <ModalFooter>
-        //   <Button onClick={handleApplyChanges}>Apply Changes</Button>
-        // </ModalFooter>
+      {(showApplyAllButton || showResetButton) &&
         <ModalFooter className="justify-content-between">
-          <Button color="secondary" onClick={handleResetChanges}>Reset Locations</Button>
-          <Button color="primary" onClick={handleApplyChanges}>Apply Changes</Button>
+          {showResetButton && <Button color="secondary" onClick={handleResetChanges}>Reset Locations</Button>}
+          {showApplyAllButton && <Button color="primary" onClick={handleApplyChanges}>Apply Changes</Button>}
       </ModalFooter>
       }
     </Modal> 

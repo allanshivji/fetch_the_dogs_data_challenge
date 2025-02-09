@@ -10,11 +10,11 @@ import DogCard from './DogCard';
 import PaginationComponent from './PaginationComponent';
 import MultiRangeSlider from './MultiRangeSlider';
 import TabsPanelComponent from './TabsPanel/TabsPanelComponent';
-import { FiltersState, RangeType, SelectOption, SearchPageProps } from '../ts_types';
-import FilterList from './FilterList';
+import { FiltersState, RangeType, SelectOption, SearchPageProps, ModalType } from '../ts_types';
 import ModalComponentContainer from './Modal/ModalComponentContainer';
 import DropdownFilter from './DropdownFilter';
 import DogsGrid from './DogsGrid';
+import FiltersView from './FiltersView';
 
 const dogsPerPage = 25; // Number of dogs per page
 
@@ -40,7 +40,7 @@ const SearchPage = (props: SearchPageProps) => {
   const [totalRecords, setTotalRecords] = useState<number>(1);
   const [error, setError] = useState<string | null>(null);
   const [matchedDog, setMatchedDog] = useState<any[]>([]) 
-  const [modalIsOpen, setModalIsOpen] = useState<boolean>(false);
+  const [modalIsOpen, setModalIsOpen] = useState<ModalType>(null);
   const [ageRange, setAgeRange] = useState<RangeType>({ min: 0, max: 20 });
   const [allZipCodes, setAllZipCodes] = useState<string[]>([])
 
@@ -107,7 +107,7 @@ const SearchPage = (props: SearchPageProps) => {
     setAllZipCodes(allZipCodesFromFilters)
     if (!doNotToggleModal) {
       setCurrentPage(1)
-      handleToggleModal()
+      handleToggleModal(null)
     }
   }
 
@@ -131,19 +131,18 @@ const SearchPage = (props: SearchPageProps) => {
     try {
       const matchedDogId = await matchDogs(favoritesFromState.favoriteIds);
       const matchedDogDetails = await getDogsByIds([matchedDogId.match])
+      if (matchedDogDetails.length > 0) {
+        handleToggleModal('matchedDog')
+      }
       setMatchedDog(matchedDogDetails)
       updateFavorites([])
-      handleToggleModal()
     } catch (err) {
       setError('Error generating match');
     }
   };
 
-  const handleToggleModal = () => {
-    setModalIsOpen(!modalIsOpen)
-    if (matchedDog.length > 0) {
-      setMatchedDog([])
-    }
+  const handleToggleModal = (modalType: ModalType) => {
+    setModalIsOpen(modalType)
   }
 
   const handleLogout = () => {
@@ -205,40 +204,45 @@ const SearchPage = (props: SearchPageProps) => {
         setRange={setAgeRange}
         setCurrentPage={setCurrentPage}
       />
-      <Button color="primary" onClick={handleToggleModal}>
+      <Button color="primary" onClick={() => handleToggleModal('locationSearch')}>
         Search By Location
       </Button>
       <ModalComponentContainer
-        isModalOpen={modalIsOpen}
+        isModalOpen={modalIsOpen === 'locationSearch'}
         modalTitle={'Search By Location'}
-        handleToggleModal={handleToggleModal}
+        handleToggleModal={() => handleToggleModal(null)}
         modalComponent={TabsPanelComponent}
+        showApplyAllButton={true}
         handleApplyFilters={handleApplyFilters}
+        showResetButton={true}
         handleResetChanges={handleResetChanges}
       />
       { allZipCodes.length > 0 &&
-        <FilterList
+        <FiltersView
+          isModalOpen={modalIsOpen}
           stateFilters={stateFilters}
           handleApplyFilters={handleApplyFilters}
           updateCities={updateCities}
           updateStates={updateStates}
           updateZipCodes={updateZipCodes}
           updateGeoLocations={updateGeoLocations}
+          handleToggleModal={handleToggleModal}
         />
       }
       {
         matchedDog.length > 0 &&
         <ModalComponentContainer
-          isModalOpen={modalIsOpen}
+          isModalOpen={modalIsOpen === 'matchedDog'}
           modalTitle={'Congratulations! You have matched with...'}
-          handleToggleModal={handleToggleModal}
+          handleToggleModal={() => handleToggleModal(null)}
           modalComponent={DogCard}
           modalComponentProps={{
             dog: matchedDog[0],
             showFavoriteButton: false
           }}
-          hideModalFooter={true}
+          showApplyAllButton={false}
           handleApplyFilters={handleApplyFilters}
+          showResetButton={false}
           handleResetChanges={handleResetChanges}
         />
       }

@@ -47,6 +47,8 @@ export interface Location {
   state: string;
 }
 
+export type ModalType = 'locationSearch' | 'matchedDog' | 'displayAllFilters' | null
+
 export interface TabComponent {
   id: number;
   tabComponentTitle: string;
@@ -74,7 +76,8 @@ export interface ModalComponentProps<T = {}> {
   handleResetChanges: () => void;
   modalComponent: FC<BaseContentProps & T>;
   modalComponentProps?: Omit<T, keyof BaseContentProps>;
-  hideModalFooter?: boolean;
+  showApplyAllButton: boolean;
+  showResetButton: boolean;
   // modalComponent: FC<{ tempSelectedFilters: FiltersState, setTempSelectedFilters: (selection: FiltersState) => void }>,
   updateCities: (cities: SelectOption[]) => void;
   updateStates: (states: SelectOption[]) => void;

@@ -11,8 +11,9 @@ const mapStateToProps = (state: any, ownProps: any) => ({
   handleApplyFilters: ownProps.handleApplyFilters,
   modalComponent: ownProps.modalComponent,
   modalComponentProps: ownProps.modalComponentProps,
-  hideModalFooter: ownProps.hideModalFooter,
-  handleResetChanges: ownProps.handleResetChanges
+  showApplyAllButton: ownProps.showApplyAllButton,
+  handleResetChanges: ownProps.handleResetChanges,
+  showResetButton: ownProps.showResetButton
 });
 
 const mapDispatchStateToProps = (dispatch: any) => ({
