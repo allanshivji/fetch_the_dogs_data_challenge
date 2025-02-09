@@ -71,7 +71,7 @@ interface BaseContentProps {
 export interface ModalComponentProps<T = {}> {
   isModalOpen: boolean;
   modalTitle: string;
-  handleToggleModal: () => void;
+  handleToggleModal: (modalType: ModalType) => void;
   handleApplyFilters: (tempSelectedFilters: FiltersState, doNotToggleModal?: boolean) => void;
   handleResetChanges: () => void;
   modalComponent: FC<BaseContentProps & T>;
@@ -153,4 +153,36 @@ export interface DropdownComponentProps<T extends boolean> {
   isMultiSelect: boolean;
   defaultValue?: DropdownValue<T>;
   setChange: Dispatch<SetStateAction<DropdownValue<T>>>;
+}
+
+export interface FiltersViewProps {
+  isModalOpen: string | null;
+  stateFilters: FiltersState;
+  handleApplyFilters: (tempSelectedFilters: FiltersState, doNotToggleModal?: boolean) => void;
+  updateCities: (cities: SelectOption[]) => void;
+  updateStates: (states: SelectOption[]) => void;
+  updateZipCodes: (zipCodes: SelectOption[]) => void;
+  updateGeoLocations: (geoLocations: SelectOption[]) => void;
+  handleToggleModal: (modalType: ModalType) => void;
+}
+
+export interface DisplayAllFiltersViewProps {
+  stateFilters: FiltersState, 
+  removeFilter: (key: string, labelToRemove: string) => void;
+}
+
+export interface FilterTagProps {
+  filterKey: string;
+  option: SelectOption;
+  removeFilter: (key: string, labelToRemove: string) => void;
+}
+
+export interface FiltersComponentProps {
+  breeds: string[];
+  setSelectedBreed: Dispatch<SetStateAction<SelectOption[]>>;
+  sortOrder: SelectOption
+  setSortOrder: Dispatch<SetStateAction<SelectOption>>;
+  ageRange: RangeType;
+  setAgeRange: Dispatch<SetStateAction<RangeType>>;
+  setCurrentPage: Dispatch<SetStateAction<number>>;
 }

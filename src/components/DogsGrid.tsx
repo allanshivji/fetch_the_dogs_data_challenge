@@ -20,7 +20,6 @@ const DogGrid = (props: DogGridProps) => {
     <>
       <Row className="justify-content-start">
         {dogs.filter((dog) => dog).map((dog) => (
-          // <Col key={dog.id} sm="12" md="6" lg="4" xl="3">
           <Col 
             key={dog.id} 
             xs="12"

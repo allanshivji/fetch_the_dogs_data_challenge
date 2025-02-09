@@ -6,7 +6,7 @@ import { ModalComponentProps, FiltersState } from '../../ts_types'
 const ModalComponent = <T extends object = {}>(props: ModalComponentProps) => {
 
   const {
-    isModalOpen,
+    isModalOpen,  
     modalTitle,
     handleToggleModal,
     handleApplyFilters,
@@ -33,8 +33,8 @@ const ModalComponent = <T extends object = {}>(props: ModalComponentProps) => {
   }
 
   return (
-     <Modal isOpen={isModalOpen} toggle={handleToggleModal} size='lg'>
-      <ModalHeader toggle={handleToggleModal}>{modalTitle}</ModalHeader>
+     <Modal isOpen={isModalOpen} toggle={() => handleToggleModal(null)} size='lg'>
+      <ModalHeader toggle={() => handleToggleModal(null)}>{modalTitle}</ModalHeader>
       <ModalBody>
         <ModalComponent 
           tempSelectedFilters={tempSelectedFilters}

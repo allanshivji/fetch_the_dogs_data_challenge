@@ -8,13 +8,12 @@ import {
 import { getBreeds, searchDogs, getDogsByIds, matchDogs, logout } from '../services/api';
 import DogCard from './DogCard';
 import PaginationComponent from './PaginationComponent';
-import MultiRangeSlider from './MultiRangeSlider';
 import TabsPanelComponent from './TabsPanel/TabsPanelComponent';
 import { FiltersState, RangeType, SelectOption, SearchPageProps, ModalType } from '../ts_types';
 import ModalComponentContainer from './Modal/ModalComponentContainer';
-import DropdownFilter from './DropdownFilter';
 import DogsGrid from './DogsGrid';
 import FiltersView from './FiltersView';
+import FiltersComponent from './FiltersComponent';
 
 const dogsPerPage = 25; // Number of dogs per page
 
@@ -168,7 +167,16 @@ const SearchPage = (props: SearchPageProps) => {
         Logout
       </Button>
       <br/>
-      <DropdownFilter<true>
+      <FiltersComponent 
+        breeds={breeds}
+        setSelectedBreed={setSelectedBreed}
+        sortOrder={sortOrder}
+        setSortOrder={setSortOrder}
+        ageRange={ageRange}
+        setAgeRange={setAgeRange}
+        setCurrentPage={setCurrentPage}
+      />
+      {/* <DropdownFilter<true>
         id={'breed'}
         label={'Breed'}
         placeHolder={'Breed'}
@@ -203,7 +211,7 @@ const SearchPage = (props: SearchPageProps) => {
         ageRange={ageRange}
         setRange={setAgeRange}
         setCurrentPage={setCurrentPage}
-      />
+      /> */}
       <Button color="primary" onClick={() => handleToggleModal('locationSearch')}>
         Search By Location
       </Button>

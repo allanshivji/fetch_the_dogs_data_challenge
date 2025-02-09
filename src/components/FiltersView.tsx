@@ -1,11 +1,9 @@
-import { useState } from 'react';
-
 import FilterTag from './FilterTag';
 import ModalComponentContainer from './Modal/ModalComponentContainer';
 import DisplayAllFiltersView from './DisplayAllFiltersView';
-import { FiltersState, SelectOption } from '../ts_types'
+import { FiltersState, SelectOption, FiltersViewProps } from '../ts_types';
 
-const FiltersView = (props: any) => {
+const FiltersView = (props: FiltersViewProps) => {
   const { 
     isModalOpen,
     stateFilters,
@@ -50,7 +48,7 @@ const FiltersView = (props: any) => {
   let count = 0;
   
   for (const key of Object.keys(stateFilters)) {
-    for (const option of stateFilters[key]) {
+    for (const option of stateFilters[key as keyof FiltersState]) {
       if (count < 5) {
         visibleFilters.push({ key, option });
         count++;
