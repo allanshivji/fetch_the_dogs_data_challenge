@@ -67,7 +67,6 @@ const CityFilter = (props: CityFilterProps) => {
           placeholder="Type City Name"
         />
       </FormGroup>
-      {/* <Button onClick={(event: any) => handleSearch(event)}>Apply Changes</Button> */}
     </Form>
   )
 }

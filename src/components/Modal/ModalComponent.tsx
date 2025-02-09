@@ -3,14 +3,17 @@ import { Button, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
 
 import { ModalComponentProps, FiltersState } from '../../ts_types'
 
-const ModalComponent = (props: ModalComponentProps) => {
+const ModalComponent = <T extends object = {}>(props: ModalComponentProps) => {
 
   const {
     isModalOpen,
     modalTitle,
     handleToggleModal,
     handleApplyFilters,
+    handleResetChanges,
     modalComponent: ModalComponent,
+    modalComponentProps = {} as T,
+    hideModalFooter,
     updateCities,
     updateStates,
     updateZipCodes,
@@ -33,12 +36,19 @@ const ModalComponent = (props: ModalComponentProps) => {
       <ModalBody>
         <ModalComponent 
           tempSelectedFilters={tempSelectedFilters}
-          setTempSelectedFilters={setTempSelectedFilters} 
+          setTempSelectedFilters={setTempSelectedFilters}
+          {...(modalComponentProps as T)}
         />
       </ModalBody>
-      <ModalFooter>
-        <Button onClick={handleApplyChanges}>Apply Changes</Button>
+      {!hideModalFooter &&
+        // <ModalFooter>
+        //   <Button onClick={handleApplyChanges}>Apply Changes</Button>
+        // </ModalFooter>
+        <ModalFooter className="justify-content-between">
+          <Button color="secondary" onClick={handleResetChanges}>Reset Locations</Button>
+          <Button color="primary" onClick={handleApplyChanges}>Apply Changes</Button>
       </ModalFooter>
+      }
     </Modal> 
   )
 }

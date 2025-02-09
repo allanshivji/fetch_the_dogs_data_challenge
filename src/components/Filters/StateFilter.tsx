@@ -1,5 +1,5 @@
-import { FC, useState, useCallback, useEffect } from 'react';
-import { Button, Form, FormGroup, Label } from 'reactstrap';
+import { useState, useCallback, useEffect } from 'react';
+import { Form, FormGroup, Label } from 'reactstrap';
 import Select from 'react-select';
 
 import { searchLocations } from '../../services/api';
@@ -50,17 +50,8 @@ const StateFilter = (props: StateFilterProps) => {
   );
 
   const handleSelectionChange = (selected: SelectOption[] | null) => {
-    // updateStates([...(selected || [])])
     setFilters(prev => ({ ...prev, selectedOptions: selected || [] }));
   };
-
-  // const handleSearch = (event: any) => {
-  //   event.preventDefault()
-  //   updateStates([...(filters.selectedOptions || [])])
-  //   if (filters.selectedOptions.length === 0) return
-  //   handleAllZipCodes()
-  // }
-
 
   return (
     <Form>
@@ -76,7 +67,6 @@ const StateFilter = (props: StateFilterProps) => {
           placeholder="Type State Name"
         />
       </FormGroup>
-      {/* <Button onClick={(event: any) => handleSearch(event)}>Search</Button> */}
     </Form>
   )
 }

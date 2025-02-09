@@ -17,16 +17,10 @@ const center = {
 
 const GeoLocationFilter = (props: GeoLocationFilterProps) => {
 
-  const { selectedGeoLocations, setTempSelectedFilters, tempSelectedFilters } = props
+  const { setTempSelectedFilters, tempSelectedFilters } = props
 
   const [map, setMap] = useState<google.maps.Map | null>(null);
   const [boundingBoxOptions, setBoundingBoxOptions] = useState<SelectOption[]>([]);
-
-  // useEffect(() => {
-  //   if (selectedGeoLocations.length > 0) {
-  //     setBoundingBoxOptions({ ...boundingBoxOptions, ...selectedGeoLocations })
-  //   }
-  // }, [])
 
   useEffect(() => {
     setTempSelectedFilters({ ...tempSelectedFilters, selectedGeoLocations: boundingBoxOptions })
@@ -92,6 +86,7 @@ const GeoLocationFilter = (props: GeoLocationFilterProps) => {
         onBoundsChanged={handleBoundsChange} // Fetch bounds only when map exists
         onZoomChanged={handleBoundsChange}
       />
+      <div style={{ fontWeight: 'bold', fontSize: '18px' }}>{'Locations:'}</div>
       {boundingBoxOptions.length > 0 &&
         boundingBoxOptions.map((option: SelectOption) => option.label).join(', ')
       }

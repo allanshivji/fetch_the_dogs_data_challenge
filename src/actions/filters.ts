@@ -20,3 +20,7 @@ export const updateGeoLocations = (geoLocations: SelectOption[]) => ({
   type: types.UPDATE_GEO_LOCATIONS,
   payload: geoLocations,
 });
+
+export const clearLocationFilters = () => ({
+  type: types.CLEAR_ALL_FILTERS
+})

@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import Select from 'react-select';
-import { Form, FormGroup, Label, Button } from 'reactstrap';
+import { Form, FormGroup, Label } from 'reactstrap';
 
 import { ZipCodeFilterProps, SelectOption } from '../../ts_types'
 
@@ -31,11 +31,6 @@ const ZipCodeFilter = (props: ZipCodeFilterProps) => {
       event.preventDefault();
     }
   };
-  
-  // const handleSearch = (event: any) => {
-  //   event.preventDefault()
-  //   // handleAllZipCodes([...tags.map((tag: TagOption) => tag.value)])
-  // }
 
   return (
     <Form>
@@ -44,11 +39,10 @@ const ZipCodeFilter = (props: ZipCodeFilterProps) => {
         <Select
           isMulti
           isClearable
-          options={[]} // No dropdown options
+          options={[]}
           value={tags}
           inputValue={inputValue}
           onInputChange={(value) => setInputValue(value)}
-          // onChange={(selected) => setTags(selected as TagOption[])}
           onKeyDown={handleKeyDown}
           placeholder="Type and press enter..."
           components={{
@@ -64,7 +58,6 @@ const ZipCodeFilter = (props: ZipCodeFilterProps) => {
           }}
         />
       </FormGroup>
-      {/* <Button onClick={(event: any) => handleSearch(event)}>Search</Button> */}
     </Form>
   )
 }

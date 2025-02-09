@@ -13,8 +13,8 @@ export const login = async (name: string, email: string) => {
   return response.status === 200
 };
 
-export const logout = () => {
-  return api.post('/auth/logout');
+export const logout = async () => {
+  await api.post('/auth/logout');
 };
 
 // Fetch Breeds

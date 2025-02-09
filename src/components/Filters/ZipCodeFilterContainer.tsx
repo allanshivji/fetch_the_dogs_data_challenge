@@ -1,5 +1,4 @@
 import { connect } from 'react-redux';
-import { updateZipCodes } from '../../actions';
 
 import ZipCodeFilter from './ZipCodeFilter';
 

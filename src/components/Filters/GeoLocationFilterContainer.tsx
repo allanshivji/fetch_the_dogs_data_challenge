@@ -4,8 +4,7 @@ import GeoLocationFilter from './GeoLocationFilter';
 
 const mapStateToProps = (state: any, ownProps: any) => ({
   tempSelectedFilters: ownProps.tempSelectedFilters,
-  setTempSelectedFilters: ownProps.setTempSelectedFilters,
-  selectedGeoLocations: state.filters.selectedGeoLocations
+  setTempSelectedFilters: ownProps.setTempSelectedFilters
 });
 
 export default connect(

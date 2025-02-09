@@ -1,8 +1,22 @@
-import { FC } from 'react'
+import { Dispatch, FC, SetStateAction } from 'react';
+
+export interface FormErrors {
+  name?: string;
+  email?: string;
+}
 
 export interface RangeType {
   min: number;
   max: number;
+}
+
+export interface Dog { 
+  id: string;
+  img: string;
+  name: string;
+  age: number;
+  breed: string;
+  zip_code: string 
 }
 
 export interface SelectOption {
@@ -15,17 +29,16 @@ export interface FilterState {
   options: SelectOption[];
   loading: boolean;
 }
-// export interface FilterState {
-//   selectedZipCodes: string[];
-//   options: SelectOption[];
-//   loading: boolean;
-// }
 
 export interface FiltersState {
   selectedCities: SelectOption[];
   selectedStates: SelectOption[];
   selectedZipCodes: SelectOption[];
   selectedGeoLocations: SelectOption[];
+}
+
+export interface FavoritesIds {
+  favoriteIds: string[]
 }
 
 export interface Location {
@@ -40,14 +53,29 @@ export interface TabComponent {
   tabComponent: FC<{ setTempSelectedFilters: (selections: FiltersState) => void, tempSelectedFilters: FiltersState }>
 }
 
+export interface DogCardProps {
+  dog: Dog;
+  onFavorite?: () => void;
+  showFavoriteButton: boolean;
+  optionAdded?: boolean;
+}
+
+interface BaseContentProps {
+  tempSelectedFilters: FiltersState;
+  setTempSelectedFilters: (filters: FiltersState) => void;
+}
 
 
-export interface ModalComponentProps {
+export interface ModalComponentProps<T = {}> {
   isModalOpen: boolean;
   modalTitle: string;
   handleToggleModal: () => void;
   handleApplyFilters: (tempSelectedFilters: FiltersState, doNotToggleModal?: boolean) => void;
-  modalComponent: FC<{ tempSelectedFilters: FiltersState, setTempSelectedFilters: (selection: FiltersState) => void }>,
+  handleResetChanges: () => void;
+  modalComponent: FC<BaseContentProps & T>;
+  modalComponentProps?: Omit<T, keyof BaseContentProps>;
+  hideModalFooter?: boolean;
+  // modalComponent: FC<{ tempSelectedFilters: FiltersState, setTempSelectedFilters: (selection: FiltersState) => void }>,
   updateCities: (cities: SelectOption[]) => void;
   updateStates: (states: SelectOption[]) => void;
   updateZipCodes: (zipCodes: SelectOption[]) => void;
@@ -79,13 +107,17 @@ export interface ZipCodeFilterProps {
 
 export interface SearchPageProps {
   stateFilters: FiltersState;
+  favoritesFromState: FavoritesIds;
   updateCities: (cities: SelectOption[]) => void;
   updateStates: (states: SelectOption[]) => void;
   updateZipCodes: (zipCodes: SelectOption[]) => void;
   updateGeoLocations: (geoLocations: SelectOption[]) => void;
+  updateFavorites: (favoriteIds: string[]) => void;
+  clearLocationFilters: () => void;
+  clearAllFavorites: () => void;
 }
 
-export interface DisplayAllFiltersProps {
+export interface FilterListProps {
   stateFilters: FiltersState;
   handleApplyFilters: (tempSelectedFilters: FiltersState, doNotToggleModal?: boolean) => void;
   updateCities: (cities: SelectOption[]) => void;
@@ -95,7 +127,27 @@ export interface DisplayAllFiltersProps {
 }
 
 export interface GeoLocationFilterProps {
-  selectedGeoLocations: SelectOption[];
   setTempSelectedFilters: (selections: FiltersState) => void;
   tempSelectedFilters: FiltersState
+}
+
+export interface RcRangeSliderProps {
+  id: string,
+  label: string;
+  ageRange: RangeType,
+  setRange: Dispatch<SetStateAction<RangeType>>
+  setCurrentPage: Dispatch<SetStateAction<number>>
+}
+
+export type DropdownValue<T extends boolean> = T extends true ? SelectOption[] : SelectOption;
+
+export interface DropdownComponentProps<T extends boolean> {
+  id: string;
+  label: string;
+  placeHolder: string;
+  dropdownOptions: SelectOption[];
+  isClearable: boolean;
+  isMultiSelect: boolean;
+  defaultValue?: DropdownValue<T>;
+  setChange: Dispatch<SetStateAction<DropdownValue<T>>>;
 }

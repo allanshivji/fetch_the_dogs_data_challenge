@@ -1,6 +1,6 @@
-import { FiltersState, DisplayAllFiltersProps, SelectOption } from "../ts_types";
+import { FiltersState, FilterListProps, SelectOption } from "../ts_types";
 
-const DisplayAllFilters = (props: DisplayAllFiltersProps) => {
+const FilterList = (props: FilterListProps) => {
   const { 
     stateFilters,
     handleApplyFilters,
@@ -24,13 +24,9 @@ const DisplayAllFilters = (props: DisplayAllFiltersProps) => {
 
   return (
     <div>
-      {/* {Object.keys(allFilters).map((key) => ( */}
       {Object.keys(stateFilters).map((key) => (
         <div key={key}>
-          {/* <h3>{key.toUpperCase()}:</h3> */}
-          {/* Render the labels as tiles with X button */}
           <div>
-            {/* {allFilters[key as keyof FiltersState].map((option: SelectOption) => ( */}
             {stateFilters[key as keyof FiltersState].map((option: SelectOption) => (
               <span key={option.label} style={{ margin: '5px', display: 'inline-block' }}>
                 <span
@@ -66,4 +62,4 @@ const DisplayAllFilters = (props: DisplayAllFiltersProps) => {
   );
 }
 
-export default DisplayAllFilters;
+export default FilterList;
