@@ -167,6 +167,7 @@ export interface DropdownComponentProps<T extends boolean> {
   isMultiSelect: boolean;
   defaultValue?: DropdownValue<T>;
   setChange: Dispatch<SetStateAction<DropdownValue<T>>>;
+  setCurrentPage: Dispatch<SetStateAction<number>>;
 }
 
 export interface FiltersViewProps {

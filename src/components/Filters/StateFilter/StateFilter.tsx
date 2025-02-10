@@ -2,14 +2,15 @@ import { useState, useCallback, useEffect } from 'react';
 import { Form, FormGroup, Label } from 'reactstrap';
 import Select from 'react-select';
 
-import { searchLocations } from '../../services/api';
-import { debounceSearch } from '../../services/debounceSearch';
+import { API } from '../../../services/api.service';
+import { debounceSearch } from '../../../services/debounce-search';
 import {
   StateFilterProps,
   FilterState,
   SelectOption,
   Location
-} from '../../ts_types';
+} from '../../../ts_types';
+import IntlMessages from '../../common/IntlMessages';
 
 const StateFilter = (props: StateFilterProps) => {
   const { selectedStates, setTempSelectedFilters, tempSelectedFilters } = props;
@@ -39,9 +40,9 @@ const StateFilter = (props: StateFilterProps) => {
     setFilters((prev) => ({ ...prev, loading: true }));
 
     try {
-      const response = await searchLocations({ states: [inputValue] }); // Fetch states
+      const response = await API.SEARCH_LOCATIONS({ states: [inputValue] }); // Fetch states
 
-      const locations: Location[] = response.results;
+      const locations: Location[] = response.data.results;
 
       const transformedOptions: SelectOption[] = locations.map((loc) => ({
         label: `${loc.state} - ${loc.zip_code}`,
@@ -71,7 +72,9 @@ const StateFilter = (props: StateFilterProps) => {
   return (
     <Form>
       <FormGroup>
-        <Label for="stateSearch">State</Label>
+        <Label for="stateSearch">
+          <IntlMessages id="filters.title-state" />
+        </Label>
         <Select
           isMulti
           isLoading={filters.loading}

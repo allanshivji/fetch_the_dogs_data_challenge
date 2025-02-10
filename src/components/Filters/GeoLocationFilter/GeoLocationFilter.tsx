@@ -1,19 +1,17 @@
 import { useState, useCallback, useEffect } from 'react';
 import { GoogleMap, useLoadScript } from '@react-google-maps/api';
 
-import { GeoLocationFilterProps, SelectOption, Location } from '../../ts_types';
-import { searchLocations } from '../../services/api';
-import { debounceSearch } from '../../services/debounceSearch';
+import {
+  GeoLocationFilterProps,
+  SelectOption,
+  Location
+} from '../../../ts_types';
+import { API } from '../../../services/api.service';
+import { debounceSearch } from '../../../services/debounce-search';
+import { GEO_LOCATION_FILTER_INITIAL_COORD } from '../../../constants/general.constants';
+import IntlMessages from '../../common/IntlMessages';
 
-const mapContainerStyle = {
-  width: '100%',
-  height: '500px'
-};
-
-const center = {
-  lat: 37.7749, // Default to San Francisco
-  lng: -122.4194
-};
+const API_KEY = process.env.REACT_APP_GOOGLE_MAPS_API_KEY;
 
 const GeoLocationFilter = (props: GeoLocationFilterProps) => {
   const { setTempSelectedFilters, tempSelectedFilters } = props;
@@ -23,8 +21,6 @@ const GeoLocationFilter = (props: GeoLocationFilterProps) => {
     []
   );
 
-  const apiKey = process.env.REACT_APP_GOOGLE_MAPS_API_KEY;
-
   useEffect(() => {
     setTempSelectedFilters({
       ...tempSelectedFilters,
@@ -33,7 +29,7 @@ const GeoLocationFilter = (props: GeoLocationFilterProps) => {
   }, [boundingBoxOptions]);
 
   const { isLoaded, loadError } = useLoadScript({
-    googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAPS_API_KEY || ''
+    googleMapsApiKey: API_KEY || ''
   });
 
   const onLoad = useCallback((mapInstance: google.maps.Map) => {
@@ -44,8 +40,10 @@ const GeoLocationFilter = (props: GeoLocationFilterProps) => {
     if (!inputValue) return;
 
     try {
-      const response = await searchLocations({ geoBoundingBox: inputValue });
-      const locations = response.results as Location[];
+      const response = await API.SEARCH_LOCATIONS({
+        geoBoundingBox: inputValue
+      });
+      const locations = response.data.results as Location[];
 
       const fetchedGeo: SelectOption[] = locations.map((loc) => ({
         label: `${loc.city}, ${loc.state} - ${loc.zip_code}`,
@@ -82,11 +80,15 @@ const GeoLocationFilter = (props: GeoLocationFilterProps) => {
     }
   }, [map]);
 
-  if (!apiKey) {
+  if (!API_KEY) {
     return (
       <div className="p-4 border border-red-500 bg-red-100 rounded-md">
-        <h3 className="text-red-700 font-semibold mb-2">Configuration Error</h3>
-        <p className="text-red-600">Error in displaying Google Maps.</p>
+        <h3 className="text-red-700 font-semibold mb-2">
+          <IntlMessages id="error.map-config-error-title" />
+        </h3>
+        <p className="text-red-600">
+          <IntlMessages id="error.map-display-error" />
+        </p>
       </div>
     );
   }
@@ -95,11 +97,10 @@ const GeoLocationFilter = (props: GeoLocationFilterProps) => {
     return (
       <div className="p-4 border border-red-500 bg-red-100 rounded-md">
         <h3 className="text-red-700 font-semibold mb-2">
-          Error Loading Google Maps
+          <IntlMessages id="error.map-loading-error-title" />
         </h3>
         <p className="text-red-600">
-          {loadError.message ||
-            'Failed to load Google Maps. Please try again later.'}
+          {loadError.message || <IntlMessages id="error.map-load-error" />}
         </p>
       </div>
     );
@@ -108,21 +109,23 @@ const GeoLocationFilter = (props: GeoLocationFilterProps) => {
   if (!isLoaded) {
     return (
       <div className="p-4 border border-blue-200 bg-blue-50 rounded-md">
-        <p className="text-blue-700">Loading maps...</p>
+        <p className="text-blue-700">
+          <IntlMessages id="error.map-loading-maps" />
+        </p>
       </div>
     );
   }
 
-  // if (loadError) return <p>Error loading maps</p>;
-  // if (!isLoaded) return <p>Loading maps...</p>;
-
   return (
     <>
       <GoogleMap
-        mapContainerStyle={mapContainerStyle}
+        mapContainerStyle={{
+          width: '100%',
+          height: '500px'
+        }}
         zoom={13}
         options={{ streetViewControl: false }}
-        center={center}
+        center={GEO_LOCATION_FILTER_INITIAL_COORD}
         onLoad={onLoad} // Capture map instance
         onBoundsChanged={handleBoundsChange} // Fetch bounds only when map exists
         onZoomChanged={handleBoundsChange}

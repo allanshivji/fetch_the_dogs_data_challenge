@@ -7,9 +7,9 @@ import {
   updateFavorites,
   clearLocationFilters,
   clearAllFavorites
-} from '../actions';
+} from '../../actions';
 
-import { SelectOption } from '../ts_types';
+import { SelectOption } from '../../ts_types';
 import SearchPage from './SearchPage';
 
 const mapStateToProps = (state: any, ownProps: any) => ({

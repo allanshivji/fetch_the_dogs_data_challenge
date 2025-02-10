@@ -2,7 +2,8 @@ import { useState, useEffect } from 'react';
 import Select from 'react-select';
 import { Form, FormGroup, Label } from 'reactstrap';
 
-import { ZipCodeFilterProps, SelectOption } from '../../ts_types';
+import { ZipCodeFilterProps, SelectOption } from '../../../ts_types';
+import IntlMessages from '../../common/IntlMessages';
 
 const ZipCodeFilter = (props: ZipCodeFilterProps) => {
   const { selectedZipCodes, setTempSelectedFilters, tempSelectedFilters } =
@@ -27,7 +28,7 @@ const ZipCodeFilter = (props: ZipCodeFilterProps) => {
       if (!tags.some((tag) => tag.value === newTag)) {
         setTags([...tags, { label: newTag, value: newTag }]);
       }
-      setInputValue(''); // Clear input after adding tag
+      setInputValue('');
       event.preventDefault();
     }
   };
@@ -35,7 +36,9 @@ const ZipCodeFilter = (props: ZipCodeFilterProps) => {
   return (
     <Form>
       <FormGroup>
-        <Label for="sortOrder">Zip Code</Label>
+        <Label for="sortOrder">
+          <IntlMessages id="filters.title-zip-code" />
+        </Label>
         <Select
           isMulti
           isClearable

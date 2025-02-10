@@ -7,6 +7,12 @@ import {
   Col
 } from 'reactstrap';
 
+import {
+  MAX_VISIBLE_PAGES,
+  MAX_SUB_PAGES
+} from '../../constants/general.constants';
+import IntlMessages from '../common/IntlMessages';
+
 interface PaginationProps {
   currentPage: number;
   dogsPerPage: number;
@@ -24,16 +30,15 @@ const PaginationComponent: React.FC<PaginationProps> = ({
 
   const getPageNumbers = () => {
     const pages = [];
-    const maxVisiblePages = 5;
 
-    if (totalPages <= maxVisiblePages) {
+    if (totalPages <= MAX_VISIBLE_PAGES) {
       for (let i = 1; i <= totalPages; i++) {
         pages.push(i);
       }
     } else {
       pages.push(1);
 
-      if (currentPage <= 3) {
+      if (currentPage <= MAX_SUB_PAGES) {
         for (let i = 2; i <= 4; i++) {
           pages.push(i);
         }
@@ -41,7 +46,7 @@ const PaginationComponent: React.FC<PaginationProps> = ({
         pages.push(totalPages);
       } else if (currentPage >= totalPages - 2) {
         pages.push('...');
-        for (let i = totalPages - 3; i <= totalPages; i++) {
+        for (let i = totalPages - MAX_SUB_PAGES; i <= totalPages; i++) {
           pages.push(i);
         }
       } else {
@@ -71,7 +76,7 @@ const PaginationComponent: React.FC<PaginationProps> = ({
                 previous
                 onClick={() => handlePageChange(currentPage - 1)}
               >
-                Prev
+                <IntlMessages id="button.previous" />
               </PaginationLink>
             </PaginationItem>
           )}
@@ -102,7 +107,7 @@ const PaginationComponent: React.FC<PaginationProps> = ({
                 next
                 onClick={() => handlePageChange(currentPage + 1)}
               >
-                Next
+                <IntlMessages id="button.next" />
               </PaginationLink>
             </PaginationItem>
           )}

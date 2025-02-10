@@ -9,31 +9,32 @@ import {
 } from 'reactstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
-import CityFilterContainer from '../Filters/CityFilterContainer';
-import StateFilterContainer from '../Filters/StateFilterContainer';
-import ZipCodeFilterContainer from '../Filters/ZipCodeFilterContainer';
+import CityFilterContainer from '../Filters/CityFilter/CityFilterContainer';
+import StateFilterContainer from '../Filters/StateFilter/StateFilterContainer';
+import ZipCodeFilterContainer from '../Filters/ZipCodeFilter/ZipCodeFilterContainer';
 import { TabsPanelComponentProps, TabComponent } from '../../ts_types';
-import GeoLocationFilterContainer from '../Filters/GeoLocationFilterContainer';
+import GeoLocationFilterContainer from '../Filters/GeoLocationFilter/GeoLocationFilterContainer';
+import IntlMessages from '../common/IntlMessages';
 
 const TabComponents = [
   {
     id: 1,
-    tabComponentTitle: 'City',
+    tabComponentTitle: 'filters.title-city',
     tabComponent: CityFilterContainer
   },
   {
     id: 2,
-    tabComponentTitle: 'State',
+    tabComponentTitle: 'filters.title-state',
     tabComponent: StateFilterContainer
   },
   {
     id: 3,
-    tabComponentTitle: 'Zip Code',
+    tabComponentTitle: 'filters.title-zip-code',
     tabComponent: ZipCodeFilterContainer
   },
   {
     id: 4,
-    tabComponentTitle: 'Geo Location',
+    tabComponentTitle: 'filters.title-geo-location',
     tabComponent: GeoLocationFilterContainer
   }
 ];
@@ -55,7 +56,8 @@ const TabsPanelComponent = (props: TabsPanelComponentProps) => {
                 }
                 onClick={() => setActiveTab(String(tabComponent.id))}
               >
-                {tabComponent.tabComponentTitle}
+                <IntlMessages id={tabComponent.tabComponentTitle} />
+                {/* {tabComponent.tabComponentTitle} */}
               </NavLink>
             </NavItem>
           );

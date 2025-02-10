@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Button, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
 
 import { ModalComponentProps, FiltersState } from '../../ts_types';
+import IntlMessages from '../common/IntlMessages';
 
 const ModalComponent = <T extends object = {}>(props: ModalComponentProps) => {
   const {
@@ -42,7 +43,7 @@ const ModalComponent = <T extends object = {}>(props: ModalComponentProps) => {
       size="lg"
     >
       <ModalHeader toggle={() => handleToggleModal(null)}>
-        {modalTitle}
+        <IntlMessages id={modalTitle} />
       </ModalHeader>
       <ModalBody>
         <ModalComponent
@@ -55,12 +56,12 @@ const ModalComponent = <T extends object = {}>(props: ModalComponentProps) => {
         <ModalFooter className="justify-content-between">
           {showResetButton && (
             <Button color="secondary" onClick={handleResetChanges}>
-              Reset Locations
+              <IntlMessages id="button.reset-loctions" />
             </Button>
           )}
           {showApplyAllButton && (
             <Button color="primary" onClick={handleApplyChanges}>
-              Apply Changes
+              <IntlMessages id="button.apply-changes" />
             </Button>
           )}
         </ModalFooter>

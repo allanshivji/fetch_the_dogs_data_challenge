@@ -1,6 +1,6 @@
 import { connect } from 'react-redux';
 
-import GeoLocationFilter from './GeoLocationFilter';
+import GeoLocationFilter from '../GeoLocationFilter/GeoLocationFilter';
 
 const mapStateToProps = (state: any, ownProps: any) => ({
   tempSelectedFilters: ownProps.tempSelectedFilters,

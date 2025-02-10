@@ -2,8 +2,7 @@ import { Label } from 'reactstrap';
 import Range from 'rc-slider';
 
 import 'rc-slider/assets/index.css';
-// import './MultiRangeSlider.css';
-import { RcRangeSliderProps } from '../ts_types';
+import { RcRangeSliderProps } from '../../../ts_types';
 
 const RcRangeSlider = (props: RcRangeSliderProps) => {
   const { id, label, ageRange, setRange, setCurrentPage } = props;

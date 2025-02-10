@@ -1,29 +1,30 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button, Container, Alert, Spinner } from 'reactstrap';
-import {
-  getBreeds,
-  searchDogs,
-  getDogsByIds,
-  matchDogs,
-  logout
-} from '../services/api';
-import DogCard from './DogCard';
-import PaginationComponent from './PaginationComponent';
-import TabsPanelComponent from './TabsPanel/TabsPanelComponent';
+import { API } from '../../services/api.service';
+import IntlMessages from '../../components/common/IntlMessages';
+
+import DogCard from '../../components/DogCard/DogCard';
+import PaginationComponent from '../../components/Pagination/PaginationComponent';
+import TabsPanelComponent from '../../components/TabsPanel/TabsPanelComponent';
 import {
   FiltersState,
   RangeType,
   SelectOption,
   SearchPageProps,
   ModalType
-} from '../ts_types';
-import ModalComponentContainer from './Modal/ModalComponentContainer';
-import DogsGrid from './DogsGrid';
-import FiltersView from './FiltersView';
-import FiltersComponent from './FiltersComponent';
-
-const dogsPerPage = 25; // Number of dogs per page
+} from '../../ts_types';
+import ModalComponentContainer from '../../components/Modal/ModalComponentContainer';
+import DogsGrid from '../../components/DogsGrid/DogsGrid';
+import FiltersView from '../../components/Filters/DisplayFilters/FiltersView';
+import FiltersComponent from '../../components/Filters/FiltersComponent';
+import {
+  PAGE_SIZE,
+  AGE_RANGE_MINIMUM,
+  AGE_RANGE_MAXIMUM,
+  CURRENT_PAGE,
+  TOTAL_RECORDS
+} from '../../constants/general.constants';
 
 const SearchPage = (props: SearchPageProps) => {
   const {
@@ -46,12 +47,15 @@ const SearchPage = (props: SearchPageProps) => {
     value: 'breed:asc',
     label: 'Breed Ascending'
   });
-  const [currentPage, setCurrentPage] = useState<number>(1);
-  const [totalRecords, setTotalRecords] = useState<number>(1);
+  const [currentPage, setCurrentPage] = useState<number>(CURRENT_PAGE);
+  const [totalRecords, setTotalRecords] = useState<number>(TOTAL_RECORDS);
   const [error, setError] = useState<string | null>(null);
   const [matchedDog, setMatchedDog] = useState<any[]>([]);
   const [modalIsOpen, setModalIsOpen] = useState<ModalType>(null);
-  const [ageRange, setAgeRange] = useState<RangeType>({ min: 0, max: 20 });
+  const [ageRange, setAgeRange] = useState<RangeType>({
+    min: AGE_RANGE_MINIMUM,
+    max: AGE_RANGE_MAXIMUM
+  });
   const [allZipCodes, setAllZipCodes] = useState<string[]>([]);
 
   const navigate = useNavigate();
@@ -59,8 +63,8 @@ const SearchPage = (props: SearchPageProps) => {
   useEffect(() => {
     const fetchBreedList = async () => {
       try {
-        const breedList = await getBreeds();
-        setBreeds(breedList);
+        const breedList = await API.GET_BREEDS();
+        setBreeds(breedList.data);
       } catch (err) {
         setError('Error fetching Breed List');
         navigate('/');
@@ -83,11 +87,7 @@ const SearchPage = (props: SearchPageProps) => {
     };
 
     fetchInitialData();
-  }, [currentPage, selectedBreed, sortOrder, ageRange]);
-
-  useEffect(() => {
-    fetchDogs();
-  }, [allZipCodes]);
+  }, [currentPage, selectedBreed, sortOrder, ageRange, allZipCodes]);
 
   const fetchDogs = async () => {
     setIsLoading(true);
@@ -96,8 +96,8 @@ const SearchPage = (props: SearchPageProps) => {
         selectedBreed.length > 0
           ? [...selectedBreed.map((option: SelectOption) => option.value)]
           : [],
-      size: dogsPerPage,
-      from: (currentPage - 1) * dogsPerPage,
+      size: PAGE_SIZE,
+      from: (currentPage - 1) * PAGE_SIZE,
       sort: sortOrder.value,
       ageMin: ageRange.min,
       ageMax: ageRange.max,
@@ -105,10 +105,11 @@ const SearchPage = (props: SearchPageProps) => {
     };
 
     try {
-      const response = await searchDogs(params);
-      const dogDetails = await getDogsByIds(response.resultIds);
-      setDogs(dogDetails);
-      setTotalRecords(response.total);
+      const response = await API.SEARCH_DOGS({ params });
+      const { total, resultIds } = response.data;
+      const dogDetails = await API.GET_DOGS_BY_ID(resultIds);
+      setDogs(dogDetails.data);
+      setTotalRecords(total);
     } catch (err) {
       setError('Error fetching dogs');
     } finally {
@@ -148,12 +149,13 @@ const SearchPage = (props: SearchPageProps) => {
 
   const handleGenerateMatch = async () => {
     try {
-      const matchedDogId = await matchDogs(favoritesFromState.favoriteIds);
-      const matchedDogDetails = await getDogsByIds([matchedDogId.match]);
-      if (matchedDogDetails.length > 0) {
+      const matchedDogId = await API.MATCH_DOGS(favoritesFromState.favoriteIds);
+      const { match } = matchedDogId.data;
+      const matchedDogDetails = await API.GET_DOGS_BY_ID([match]);
+      if (matchedDogDetails.data.length > 0) {
         handleToggleModal('matchedDog');
       }
-      setMatchedDog(matchedDogDetails);
+      setMatchedDog(matchedDogDetails.data);
       updateFavorites([]);
     } catch (err) {
       setError('Error generating match');
@@ -165,7 +167,7 @@ const SearchPage = (props: SearchPageProps) => {
   };
 
   const handleLogout = () => {
-    logout();
+    API.LOGOUT();
     navigate('/');
   };
 
@@ -175,7 +177,9 @@ const SearchPage = (props: SearchPageProps) => {
 
   return (
     <Container>
-      <h2 className="my-4">Welcome to Fetch! 🐶 Find Your New Best Friend</h2>
+      <h2 className="my-4">
+        <IntlMessages id="page.title" />
+      </h2>
       {error && <Alert color="danger">{error}</Alert>}
       <Button
         color="primary"
@@ -183,7 +187,7 @@ const SearchPage = (props: SearchPageProps) => {
         disabled={favoritesFromState.favoriteIds.length === 0}
         className="mt-3 ml-3"
       >
-        Generate Match
+        <IntlMessages id="button.generate-match" />
       </Button>
       <Button
         color="secondary"
@@ -191,10 +195,10 @@ const SearchPage = (props: SearchPageProps) => {
         disabled={favoritesFromState.favoriteIds.length === 0}
         className="mt-3 ml-3"
       >
-        Reset Favorites
+        <IntlMessages id="button.reset-favorites" />
       </Button>
       <Button color="danger" onClick={handleLogout} className="mt-3 ml-3">
-        Logout
+        <IntlMessages id="button.logout" />
       </Button>
       <br />
       <FiltersComponent
@@ -210,11 +214,11 @@ const SearchPage = (props: SearchPageProps) => {
         color="primary"
         onClick={() => handleToggleModal('locationSearch')}
       >
-        Search By Location
+        <IntlMessages id="button.search-by-location" />
       </Button>
       <ModalComponentContainer
         isModalOpen={modalIsOpen === 'locationSearch'}
-        modalTitle={'Search By Location'}
+        modalTitle={'modal.title-search-by-location'}
         handleToggleModal={() => handleToggleModal(null)}
         modalComponent={TabsPanelComponent}
         showApplyAllButton={true}
@@ -237,7 +241,7 @@ const SearchPage = (props: SearchPageProps) => {
       {matchedDog.length > 0 && (
         <ModalComponentContainer
           isModalOpen={modalIsOpen === 'matchedDog'}
-          modalTitle={'Congratulations! You have matched with...'}
+          modalTitle={'modal.title-congrats-match'}
           handleToggleModal={() => handleToggleModal(null)}
           modalComponent={DogCard}
           modalComponentProps={{
@@ -266,13 +270,15 @@ const SearchPage = (props: SearchPageProps) => {
             <PaginationComponent
               currentPage={currentPage}
               setCurrentPage={setCurrentPage}
-              dogsPerPage={dogsPerPage}
+              dogsPerPage={PAGE_SIZE}
               total={totalRecords}
             />
           </div>
         </>
       ) : (
-        <div className="text-center my-5">No Dogs Found</div>
+        <div className="text-center my-5">
+          <IntlMessages id="error.no-dogs-found" />
+        </div>
       )}
     </Container>
   );

@@ -1,7 +1,7 @@
 import Select from 'react-select';
 import { Label } from 'reactstrap';
 
-import { DropdownComponentProps, DropdownValue } from '../ts_types';
+import { DropdownComponentProps, DropdownValue } from '../../../ts_types';
 
 const DropdownComponent = <T extends boolean>(
   props: DropdownComponentProps<T>
@@ -14,7 +14,8 @@ const DropdownComponent = <T extends boolean>(
     isClearable,
     isMultiSelect,
     defaultValue,
-    setChange
+    setChange,
+    setCurrentPage
   } = props;
 
   return (
@@ -26,6 +27,7 @@ const DropdownComponent = <T extends boolean>(
         placeholder={placeHolder}
         defaultValue={defaultValue || null}
         onChange={(selected) => {
+          setCurrentPage(1);
           setChange(selected as DropdownValue<T>);
         }}
         getOptionLabel={(e) => e.label}

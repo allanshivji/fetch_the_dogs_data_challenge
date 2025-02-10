@@ -1,7 +1,12 @@
 import FilterTag from './FilterTag';
-import ModalComponentContainer from './Modal/ModalComponentContainer';
+import ModalComponentContainer from '../../Modal/ModalComponentContainer';
 import DisplayAllFiltersView from './DisplayAllFiltersView';
-import { FiltersState, SelectOption, FiltersViewProps } from '../ts_types';
+import {
+  FiltersState,
+  SelectOption,
+  FiltersViewProps
+} from '../../../ts_types';
+import { MAX_VISIBLE_DISPLAY_FILTERS } from '../../../constants/general.constants';
 
 const FiltersView = (props: FiltersViewProps) => {
   const {
@@ -45,13 +50,12 @@ const FiltersView = (props: FiltersViewProps) => {
     0
   );
 
-  // Get first 5 filters for display
   const visibleFilters = [];
   let count = 0;
 
   for (const key of Object.keys(stateFilters)) {
     for (const option of stateFilters[key as keyof FiltersState]) {
-      if (count < 5) {
+      if (count < MAX_VISIBLE_DISPLAY_FILTERS) {
         visibleFilters.push({ key, option });
         count++;
       }
@@ -70,18 +74,18 @@ const FiltersView = (props: FiltersViewProps) => {
           />
         ))}
 
-        {totalFilters > 5 && (
+        {totalFilters > MAX_VISIBLE_DISPLAY_FILTERS && (
           <>
             <button
               onClick={() => handleToggleModal('displayAllFilters')}
               className="text-blue-600 hover:text-blue-800"
             >
-              ...{totalFilters - 5} more filters
+              ...{totalFilters - MAX_VISIBLE_DISPLAY_FILTERS} more filters
             </button>
 
             <ModalComponentContainer
               isModalOpen={isModalOpen === 'displayAllFilters'}
-              modalTitle="All Filters"
+              modalTitle="modal.title-all-filter"
               handleToggleModal={() => handleToggleModal(null)}
               modalComponent={DisplayAllFiltersView}
               modalComponentProps={{

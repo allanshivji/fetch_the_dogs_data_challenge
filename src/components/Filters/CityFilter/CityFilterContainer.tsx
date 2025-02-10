@@ -1,6 +1,6 @@
 import { connect } from 'react-redux';
 
-import CityFilter from './CityFilter';
+import CityFilter from '../CityFilter/CityFilter';
 
 const mapStateToProps = (state: any, ownProps: any) => ({
   tempSelectedFilters: ownProps.tempSelectedFilters,

@@ -2,7 +2,7 @@ import {
   SelectOption,
   FiltersState,
   DisplayAllFiltersViewProps
-} from '../ts_types';
+} from '../../../ts_types';
 import FilterTag from './FilterTag';
 
 const DisplayAllFiltersView = (props: DisplayAllFiltersViewProps) => {

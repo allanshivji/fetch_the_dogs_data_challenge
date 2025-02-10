@@ -1,6 +1,7 @@
 import { Card, CardBody, CardTitle, CardImg, Button } from 'reactstrap';
 
-import { DogCardProps } from '../ts_types';
+import { DogCardProps } from '../../ts_types';
+import IntlMessages from '../common/IntlMessages';
 
 const DogCard = (props: DogCardProps) => {
   const { dog, showFavoriteButton, optionAdded, onFavorite } = props;
@@ -10,15 +11,27 @@ const DogCard = (props: DogCardProps) => {
       <CardImg top src={dog.img} alt={dog.name} />
       <CardBody>
         <CardTitle tag="h5">{dog.name}</CardTitle>
-        <p>Age: {dog.age}</p>
-        <p>Breed: {dog.breed}</p>
-        <p>Zip Code: {dog.zip_code}</p>
+        <p>
+          <IntlMessages id="dogs.title-age" />: {dog.age}
+        </p>
+        <p>
+          <IntlMessages id="dogs.title-breed" />: {dog.breed}
+        </p>
+        <p>
+          <IntlMessages id="dogs.title-zip-code" />: {dog.zip_code}
+        </p>
         {showFavoriteButton && (
           <Button
             color={`${optionAdded ? 'secondary' : 'primary'}`}
             onClick={onFavorite}
           >
-            {`${optionAdded ? 'Added' : 'Add'} to Favorites`}
+            {
+              <IntlMessages
+                id={
+                  optionAdded ? 'button.favorite-added' : 'button.add-favorite'
+                }
+              />
+            }
           </Button>
         )}
       </CardBody>

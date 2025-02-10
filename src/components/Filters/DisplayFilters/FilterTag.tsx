@@ -1,4 +1,4 @@
-import { FilterTagProps } from '../ts_types';
+import { FilterTagProps } from '../../../ts_types';
 
 const FilterTag = (props: FilterTagProps) => {
   const { filterKey, option, removeFilter } = props;

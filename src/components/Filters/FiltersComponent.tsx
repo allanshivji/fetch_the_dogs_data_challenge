@@ -1,6 +1,6 @@
-import DropdownFilter from './DropdownFilter';
-import MultiRangeSlider from './MultiRangeSlider';
-import { FiltersComponentProps } from '../ts_types';
+import DropdownFilter from './DropdownFilter/DropdownFilter';
+import MultiRangeSlider from './MultiRangeSliderFilter/MultiRangeSlider';
+import { FiltersComponentProps } from '../../ts_types';
 
 const FiltersComponent = (props: FiltersComponentProps) => {
   const {
@@ -26,6 +26,7 @@ const FiltersComponent = (props: FiltersComponentProps) => {
           label: breed
         }))}
         setChange={setSelectedBreed}
+        setCurrentPage={setCurrentPage}
       />
       <DropdownFilter<false>
         id={'sortOrder'}
@@ -41,6 +42,7 @@ const FiltersComponent = (props: FiltersComponentProps) => {
           { value: 'name:desc', label: 'Name Descending' }
         ]}
         setChange={setSortOrder}
+        setCurrentPage={setCurrentPage}
       />
       <MultiRangeSlider
         id={'slider'}

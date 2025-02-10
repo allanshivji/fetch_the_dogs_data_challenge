@@ -1,4 +1,4 @@
-import { useState, FormEvent } from 'react';
+import { useState, FormEvent, ChangeEvent } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   Button,
@@ -10,8 +10,10 @@ import {
   Alert
 } from 'reactstrap';
 
-import { login } from '../services/api';
-import { FormErrors } from '../ts_types';
+import { API } from '../../services/api.service';
+import { FormErrors } from '../../ts_types';
+import { EMAIL_REGEX } from '../../constants/general.constants';
+import IntlMessages from '../../components/common/IntlMessages';
 
 const LoginPage = () => {
   const [formData, setFormData] = useState({
@@ -34,10 +36,9 @@ const LoginPage = () => {
     }
 
     // Email validation
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!formData.email.trim()) {
       newErrors.email = 'Email is required';
-    } else if (!emailRegex.test(formData.email)) {
+    } else if (!EMAIL_REGEX.test(formData.email)) {
       newErrors.email = 'Please enter a valid email address';
     }
 
@@ -45,7 +46,7 @@ const LoginPage = () => {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
       ...prev,
@@ -75,7 +76,10 @@ const LoginPage = () => {
 
     try {
       setIsSubmitting(true);
-      const success = await login(formData.name, formData.email);
+      const success = await API.LOGIN({
+        name: formData.name,
+        email: formData.email
+      });
 
       if (success) {
         navigate('/search');
@@ -95,11 +99,15 @@ const LoginPage = () => {
 
   return (
     <Container>
-      <h2 className="my-4">Login to Find Your Dog</h2>
+      <h2 className="my-4">
+        <IntlMessages id="login.title" />
+      </h2>
       {submitError && <Alert color="danger">{submitError}</Alert>}
       <Form onSubmit={handleSubmit}>
         <FormGroup>
-          <Label for="name">Name</Label>
+          <Label for="name">
+            <IntlMessages id="login.label-name-field" />
+          </Label>
           <Input
             type="text"
             name="name"
@@ -114,7 +122,9 @@ const LoginPage = () => {
           )}
         </FormGroup>
         <FormGroup>
-          <Label for="email">Email</Label>
+          <Label for="email">
+            <IntlMessages id="login.label-email-field" />
+          </Label>
           <Input
             type="email"
             name="email"
@@ -129,7 +139,11 @@ const LoginPage = () => {
           )}
         </FormGroup>
         <Button color="primary" type="submit" disabled={isSubmitting}>
-          {isSubmitting ? 'Logging in...' : 'Login'}
+          {isSubmitting ? (
+            <IntlMessages id="button.is-logging-in" />
+          ) : (
+            <IntlMessages id="button.login" />
+          )}
         </Button>
       </Form>
     </Container>
