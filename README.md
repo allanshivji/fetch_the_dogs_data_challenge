@@ -1,6 +1,3 @@
-<<<<<<< HEAD
-# fetch_the_dogs_data_challenge
-=======
 # 🐶 Dog Adoption App
 
 Welcome to the Dog Adoption App! This application allows users to search for dogs, filter results, add favorites, and generate matches. It also features light/dark mode support and Google Maps integration.
@@ -61,4 +58,3 @@ Ensure you have **Node.js** and **npm** installed on your machine.
 ## ⚠️ Known Limitations
 - Google Maps functionality is currently disabled as an API key is not provided.
 - Location search will show placeholder content for the map view.
->>>>>>> dev
