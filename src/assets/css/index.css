@@ -1,0 +1,174 @@
+* {
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+  --primary-background-color: #fff;
+  --primary-text-color: #000;
+  --card-background-color: #fff;
+  --card-text-color: '#000';
+  --action-card-background-color: #fff;
+  --extra-filters-color: #0d6efd;
+
+  --input-background: #fff;
+  --input-background-hover: #rgba(13, 110, 253, 0.2);
+  --react-select-focused: #0d6efd;
+  --react-select-menu-background: #fff;
+  --react-select-option-selected: #0d6efd;
+  --react-select-input-text: #333333;
+  --react-select-select-option: #fff;
+  --react-select-select-option-color: #000;
+  --react-select-option-color-is-selected: #d5d5d5;
+  --react-select-clear-indicator-color: #444444;
+  --react-select-clear-indicator-color-hover: #000;
+  --react-select-carat-color: #000;
+}
+
+[data-theme='dark'] {
+  --primary-background-color: #000;
+  --primary-text-color: #fff;
+  --card-background-color: #302f2f;
+  --card-text-color: '#fff';
+  --action-card-background-color: #2d2d2d;
+  --extra-filters-color: #fff;
+
+  --input-background: #2a2a2a;
+  --input-background-hover: #2a2a2a;
+  --react-select-focused: #4a5568;
+  --react-select-menu-background: #4a5568;
+  --react-select-input-text: #4a5568;
+  --react-select-option: #57719b;
+  --react-select-option-color: #fff;
+  --react-select-option-color-is-selected: #819dc9;
+  --react-select-clear-indicator-color: #a0a0a0;
+  --react-select-clear-indicator-color-hover: #fff;
+  --react-select-carat-color: #fff;
+}
+
+.app {
+  background-color: var(--primary-background-color);
+  color: var(--primary-text-color);
+  transition:
+    background-color 0.5s ease,
+    color 0.5s ease;
+}
+
+.theme-option {
+  height: 25px;
+  width: 25px;
+  border: 1px solid;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.theme-options {
+  display: flex;
+  gap: 10px;
+}
+
+#theme-light {
+  background-color: #fff;
+}
+
+#theme-dark {
+  background-color: #000;
+}
+
+#card-theme {
+  background-color: var(--card-background-color);
+  color: var(--card-text-color);
+}
+
+.action-card-background {
+  background-color: var(--action-card-background-color);
+  color: var(--card-text-color);
+}
+
+.individual-card-background {
+  background-color: var(--primary-background-color);
+  color: var(--primary-text-color);
+}
+
+.extra-filters {
+  color: var(--extra-filters-color);
+  text-decoration: underline;
+}
+
+/* React-Select elements */
+
+.react-select__control {
+  background-color: var(--input-background) !important;
+}
+
+.react-select__menu {
+  background-color: var(--react-select-menu-background) !important;
+}
+
+.react-select__single-value {
+  color: #007bff !important;
+}
+
+.react-select__option {
+  background-color: var(--react-select-option) !important;
+  color: var(--react-select-option-color) !important;
+}
+
+.react-select__option:hover {
+  background-color: #007bff !important;
+  color: #ffffff !important;
+}
+
+.react-select__option--is-selected {
+  background-color: var(--react-select-option-color-is-selected) !important;
+  color: var(--react-select-option-color) !important;
+}
+
+.react-select__multi-value__remove {
+  color: #000;
+}
+
+.react-select__clear-indicator {
+  color: var(--react-select-clear-indicator-color);
+}
+
+.react-select__clear-indicator:hover {
+  color: var(--react-select-clear-indicator-color-hover);
+}
+
+.react-select__input-container input {
+  caret-color: var(--react-select-carat-color) !important;
+}
+
+/* Dog Card */
+.hover-shadow {
+  transition: all 0.3s ease;
+}
+
+.hover-shadow:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important;
+}
+
+.dog-card-image-wrapper {
+  position: relative;
+  padding-top: 75%; /* 4:3 Aspect Ratio */
+  overflow: hidden;
+}
+
+.dog-card-image {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.btn {
+  transition: all 0.2s ease;
+}
+
+.fw-medium {
+  font-weight: 500;
+}
