@@ -62,6 +62,8 @@ export interface TabComponent {
   }>;
 }
 
+// ************************************ Component Props **********************************
+
 export interface DogCardProps {
   dog: Dog;
   onFavorite?: () => void;
@@ -203,4 +205,11 @@ export interface FiltersComponentProps {
   ageRange: RangeType;
   setAgeRange: Dispatch<SetStateAction<RangeType>>;
   setCurrentPage: Dispatch<SetStateAction<number>>;
+}
+
+export interface ToggleSwitchFilterProps {
+  onChange: (value: boolean) => void;
+  defaultChecked?: boolean;
+  offLabel: string;
+  onLabel: string;
 }

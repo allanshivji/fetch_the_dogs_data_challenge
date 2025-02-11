@@ -14,6 +14,8 @@ export default {
   'button.favorite-added': 'Added to Favorites',
   'button.reset-loctions': 'Reset Locations',
   'button.apply-changes': 'Apply Changes',
+  'button.toggle-theme-off-label': 'Light',
+  'button.toggle-theme-oon-label': 'Dark',
 
   // Errors Text
   'error.no-dogs-found': 'No Dogs Found',
@@ -32,6 +34,7 @@ export default {
   'dogs.title-age': 'Age',
   'dogs.title-breed': 'Breed',
   'dogs.title-zip-code': 'Zip Code',
+  'dogs.years': 'Years',
 
   // Filters
   'filters.title-city': 'City',

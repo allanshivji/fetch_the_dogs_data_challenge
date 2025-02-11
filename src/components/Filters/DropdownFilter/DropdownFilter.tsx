@@ -23,6 +23,7 @@ const DropdownComponent = <T extends boolean>(
       <Label for={id}>{label}</Label>
       <Select
         id={id}
+        classNamePrefix="react-select"
         isMulti={isMultiSelect}
         placeholder={placeHolder}
         defaultValue={defaultValue || null}

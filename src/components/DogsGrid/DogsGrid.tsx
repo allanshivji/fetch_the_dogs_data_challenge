@@ -23,7 +23,7 @@ const DogGrid = (props: DogGridProps) => {
             sm="6"
             md="4"
             lg="3"
-            className="col-xl" // This will make columns equal width on xl screens
+            className="col-xl mb-4" // This will make columns equal width on xl screens
             style={{ minWidth: '20%', maxWidth: '300px' }} // Forces 5 columns on xl screens
           >
             <DogCard

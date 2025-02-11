@@ -1,6 +1,16 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Button, Container, Alert, Spinner } from 'reactstrap';
+import {
+  Button,
+  Container,
+  Alert,
+  Spinner,
+  Row,
+  Col,
+  Card,
+  CardBody,
+  ButtonGroup
+} from 'reactstrap';
 import { API } from '../../services/api.service';
 import IntlMessages from '../../components/common/IntlMessages';
 
@@ -25,6 +35,7 @@ import {
   CURRENT_PAGE,
   TOTAL_RECORDS
 } from '../../constants/general.constants';
+import Theme from '../../components/common/Theme';
 
 const SearchPage = (props: SearchPageProps) => {
   const {
@@ -176,46 +187,130 @@ const SearchPage = (props: SearchPageProps) => {
   };
 
   return (
-    <Container>
-      <h2 className="my-4">
-        <IntlMessages id="page.title" />
-      </h2>
-      {error && <Alert color="danger">{error}</Alert>}
-      <Button
-        color="primary"
-        onClick={handleGenerateMatch}
-        disabled={favoritesFromState.favoriteIds.length === 0}
-        className="mt-3 ml-3"
-      >
-        <IntlMessages id="button.generate-match" />
-      </Button>
-      <Button
-        color="secondary"
-        onClick={handleFavoritesReset}
-        disabled={favoritesFromState.favoriteIds.length === 0}
-        className="mt-3 ml-3"
-      >
-        <IntlMessages id="button.reset-favorites" />
-      </Button>
-      <Button color="danger" onClick={handleLogout} className="mt-3 ml-3">
-        <IntlMessages id="button.logout" />
-      </Button>
-      <br />
-      <FiltersComponent
-        breeds={breeds}
-        setSelectedBreed={setSelectedBreed}
-        sortOrder={sortOrder}
-        setSortOrder={setSortOrder}
-        ageRange={ageRange}
-        setAgeRange={setAgeRange}
-        setCurrentPage={setCurrentPage}
-      />
-      <Button
-        color="primary"
-        onClick={() => handleToggleModal('locationSearch')}
-      >
-        <IntlMessages id="button.search-by-location" />
-      </Button>
+    <div className="min-vh-100 ">
+      <Row className="mb-4 px-4 pt-4 ">
+        <Col
+          xs={12}
+          className="d-flex justify-content-between align-items-center flex-wrap"
+        >
+          <h2 className="mb-0">
+            <IntlMessages id="page.title" />
+          </h2>
+          <div className="d-flex gap-2 mt-2 mt-sm-0">
+            <Theme />
+            <Button color="danger" onClick={handleLogout} size="sm">
+              <IntlMessages id="button.logout" />
+            </Button>
+          </div>
+        </Col>
+      </Row>
+      <Container fluid className="px-4">
+        {error && (
+          <Alert color="danger" className="mb-4">
+            {error}
+          </Alert>
+        )}
+
+        <Card className="mb-4 shadow-sm action-card-background">
+          <CardBody>
+            <Row className="align-items-center">
+              <Col xs={12} md={6} className="mb-3 mb-md-0">
+                <ButtonGroup className="w-100">
+                  <Button
+                    color="primary"
+                    onClick={handleGenerateMatch}
+                    disabled={favoritesFromState.favoriteIds.length === 0}
+                  >
+                    <IntlMessages id="button.generate-match" />
+                  </Button>
+                  <Button
+                    color="secondary"
+                    onClick={handleFavoritesReset}
+                    disabled={favoritesFromState.favoriteIds.length === 0}
+                  >
+                    <IntlMessages id="button.reset-favorites" />
+                  </Button>
+                </ButtonGroup>
+              </Col>
+              <Col xs={12} md={6}>
+                <Button
+                  color="info"
+                  onClick={() => handleToggleModal('locationSearch')}
+                  className="w-100"
+                  outline
+                >
+                  <IntlMessages id="button.search-by-location" />
+                </Button>
+              </Col>
+            </Row>
+          </CardBody>
+        </Card>
+
+        <Card className="mb-4 shadow-sm action-card-background">
+          <CardBody>
+            <FiltersComponent
+              breeds={breeds}
+              setSelectedBreed={setSelectedBreed}
+              sortOrder={sortOrder}
+              setSortOrder={setSortOrder}
+              ageRange={ageRange}
+              setAgeRange={setAgeRange}
+              setCurrentPage={setCurrentPage}
+            />
+          </CardBody>
+        </Card>
+
+        {/* Active Filters Display */}
+        {allZipCodes.length > 0 && (
+          <Card className="mb-4 shadow-sm action-card-background">
+            <CardBody>
+              <FiltersView
+                isModalOpen={modalIsOpen}
+                stateFilters={stateFilters}
+                handleApplyFilters={handleApplyFilters}
+                updateCities={updateCities}
+                updateStates={updateStates}
+                updateZipCodes={updateZipCodes}
+                updateGeoLocations={updateGeoLocations}
+                handleToggleModal={handleToggleModal}
+              />
+            </CardBody>
+          </Card>
+        )}
+
+        {/* Results Section */}
+        <Card className="shadow-sm action-card-background">
+          <CardBody>
+            {isLoading ? (
+              <div className="d-flex justify-content-center my-5">
+                <Spinner color="primary" />
+              </div>
+            ) : dogs.length !== 0 ? (
+              <>
+                <DogsGrid
+                  dogs={dogs}
+                  handleFavorite={handleFavorite}
+                  favoritesFromState={favoritesFromState}
+                />
+                <div className="d-flex justify-content-center mt-4">
+                  <PaginationComponent
+                    currentPage={currentPage}
+                    setCurrentPage={setCurrentPage}
+                    dogsPerPage={PAGE_SIZE}
+                    total={totalRecords}
+                  />
+                </div>
+              </>
+            ) : (
+              <div className="text-center my-5">
+                <IntlMessages id="error.no-dogs-found" />
+              </div>
+            )}
+          </CardBody>
+        </Card>
+      </Container>
+
+      {/* Modals */}
       <ModalComponentContainer
         isModalOpen={modalIsOpen === 'locationSearch'}
         modalTitle={'modal.title-search-by-location'}
@@ -226,18 +321,7 @@ const SearchPage = (props: SearchPageProps) => {
         showResetButton={true}
         handleResetChanges={handleResetChanges}
       />
-      {allZipCodes.length > 0 && (
-        <FiltersView
-          isModalOpen={modalIsOpen}
-          stateFilters={stateFilters}
-          handleApplyFilters={handleApplyFilters}
-          updateCities={updateCities}
-          updateStates={updateStates}
-          updateZipCodes={updateZipCodes}
-          updateGeoLocations={updateGeoLocations}
-          handleToggleModal={handleToggleModal}
-        />
-      )}
+
       {matchedDog.length > 0 && (
         <ModalComponentContainer
           isModalOpen={modalIsOpen === 'matchedDog'}
@@ -254,33 +338,7 @@ const SearchPage = (props: SearchPageProps) => {
           handleResetChanges={handleResetChanges}
         />
       )}
-      {isLoading ? (
-        <div className="d-flex justify-content-center my-5">
-          <Spinner color="primary" />
-        </div>
-      ) : dogs.length !== 0 ? (
-        <>
-          <DogsGrid
-            dogs={dogs}
-            handleFavorite={handleFavorite}
-            favoritesFromState={favoritesFromState}
-          />
-          {/* Pagination */}
-          <div className="d-flex justify-content-center mt-4">
-            <PaginationComponent
-              currentPage={currentPage}
-              setCurrentPage={setCurrentPage}
-              dogsPerPage={PAGE_SIZE}
-              total={totalRecords}
-            />
-          </div>
-        </>
-      ) : (
-        <div className="text-center my-5">
-          <IntlMessages id="error.no-dogs-found" />
-        </div>
-      )}
-    </Container>
+    </div>
   );
 };
 

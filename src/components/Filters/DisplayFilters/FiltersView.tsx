@@ -78,7 +78,13 @@ const FiltersView = (props: FiltersViewProps) => {
           <>
             <button
               onClick={() => handleToggleModal('displayAllFilters')}
-              className="text-blue-600 hover:text-blue-800"
+              className="text-blue-600 extra-filters"
+              style={{
+                background: 'none',
+                border: 'none',
+                padding: '0px',
+                cursor: 'pointer'
+              }}
             >
               ...{totalFilters - MAX_VISIBLE_DISPLAY_FILTERS} more filters
             </button>

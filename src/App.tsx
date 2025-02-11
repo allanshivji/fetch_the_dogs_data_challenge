@@ -12,6 +12,7 @@ import SearchContainer from './views/search/SearchContainer';
 import { setNavigationCallback } from '././services/app.service';
 import AppLocale from './lang';
 import { LOCALE } from './constants/general.constants';
+import './index.css';
 
 interface NavigationHandlerProps {
   children: ReactNode;
@@ -35,20 +36,22 @@ const App = (): JSX.Element => {
   const currentAppLocale = AppLocale[LOCALE];
 
   return (
-    <IntlProvider
-      locale={currentAppLocale.locale}
-      messages={currentAppLocale.messages}
-      defaultLocale="en"
-    >
-      <Router>
-        <NavigationHandler>
-          <Routes>
-            <Route path="/" element={<Login />} />
-            <Route path="/search" element={<SearchContainer />} />
-          </Routes>
-        </NavigationHandler>
-      </Router>
-    </IntlProvider>
+    <div className="app" style={{ minHeight: '100vh' }}>
+      <IntlProvider
+        locale={currentAppLocale.locale}
+        messages={currentAppLocale.messages}
+        defaultLocale="en"
+      >
+        <Router>
+          <NavigationHandler>
+            <Routes>
+              <Route path="/" element={<Login />} />
+              <Route path="/search" element={<SearchContainer />} />
+            </Routes>
+          </NavigationHandler>
+        </Router>
+      </IntlProvider>
+    </div>
   );
 };
 
